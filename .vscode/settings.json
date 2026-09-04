@@ -1,0 +1,11 @@
+{
+  "python.defaultInterpreterPath": "C:\\Users\\srijayavel\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe",
+  "python.analysis.extraPaths": [
+    "C:\\Users\\srijayavel\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages",
+    "${workspaceFolder}/landguard-backend"
+  ],
+  "python.analysis.autoSearchPaths": true,
+  "python.analysis.diagnosticSeverityOverrides": {
+    "reportMissingImports": "none"
+  }
+}
