@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { getAlerts } from '../services/api';
 import RiskBadge from './RiskBadge';
-import { BellRing, ShieldAlert, Sparkles, MapPin, AlertTriangle, ArrowRight, Gavel, Scale } from 'lucide-react';
+import {
+  BellRing, ShieldAlert, Sparkles, MapPin, AlertTriangle,
+  ArrowRight, Gavel, Scale, Flame, Zap
+} from 'lucide-react';
 
 export default function AlertsPanel({ onSelectCase }) {
   const [alerts, setAlerts] = useState([]);
@@ -21,32 +24,35 @@ export default function AlertsPanel({ onSelectCase }) {
 
   if (loading) {
     return (
-      <div className="solid-card p-12 text-center rounded-xl space-y-3">
-        <div className="w-8 h-8 border-4 border-red-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
-        <p className="text-xs text-red-400 font-medium">Scanning High-Risk Priority Alerts Queue...</p>
+      <div className="art-card p-16 text-center rounded-2xl space-y-3">
+        <div className="w-10 h-10 border-4 border-rose-500 border-t-transparent rounded-full animate-spin mx-auto shadow-[0_0_15px_#f43f5e]"></div>
+        <p className="text-xs text-rose-300 font-mono font-medium animate-pulse">RADAR SCANNING CRITICAL THREAT MATRIX...</p>
       </div>
     );
   }
 
   return (
     <div className="space-y-4">
-      {/* Header */}
-      <div className="solid-card p-4 rounded-xl flex flex-wrap items-center justify-between gap-4 border border-red-900/50 bg-red-950/20">
-        <div className="flex items-center gap-3">
-          <div className="bg-red-600 p-2.5 rounded-lg text-white shadow-md border border-red-500">
-            <BellRing className="w-6 h-6 animate-bounce" />
+      {/* Threat Radar Banner */}
+      <div className="art-card p-5 rounded-2xl flex flex-wrap items-center justify-between gap-4 border border-rose-900/40 bg-gradient-to-r from-rose-950/30 via-slate-900 to-slate-900">
+        <div className="flex items-center gap-3.5">
+          <div className="relative">
+            <div className="absolute -inset-1 bg-rose-500 rounded-xl blur-sm opacity-60 animate-pulse"></div>
+            <div className="relative bg-rose-950 p-2.5 rounded-xl border border-rose-500 text-rose-400">
+              <Flame className="w-6 h-6" />
+            </div>
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-base font-bold text-gray-100">
-                Priority High-Risk Early Warning Queue
+              <h2 className="text-base font-display font-bold text-white">
+                Early Warning Threat Radar & Critical Injunction Queue
               </h2>
-              <span className="bg-red-950 text-red-400 text-xs font-mono font-bold px-2 py-0.5 rounded border border-red-800">
-                {alerts.length} Critical Alerts
+              <span className="bg-rose-950 text-rose-400 text-xs font-mono font-bold px-2.5 py-0.5 rounded-full border border-rose-800 shadow-[0_0_10px_rgba(244,63,94,0.3)]">
+                {alerts.length} CRITICAL
               </span>
             </div>
-            <p className="text-xs text-gray-400 mt-0.5">
-              Acquisition cases flagged for imminent litigation injunctions, compensation disputes, or agitations
+            <p className="text-xs text-slate-400 mt-0.5">
+              Acquisition corridors flagged for imminent High Court stays, valuation agitations, or environmental freezes
             </p>
           </div>
         </div>
@@ -59,44 +65,46 @@ export default function AlertsPanel({ onSelectCase }) {
           return (
             <div
               key={item.case_id || item.project_id}
-              className="solid-card p-5 rounded-xl border border-gray-800 hover:border-red-900/80 transition-all space-y-4 bg-gray-900"
+              className="art-card art-card-glow p-5 rounded-2xl border border-white/10 hover:border-rose-500/50 transition-all space-y-4 group"
             >
               {/* Card Top Header */}
-              <div className="flex items-center justify-between border-b border-gray-800 pb-3">
+              <div className="flex items-center justify-between border-b border-white/5 pb-3">
                 <div className="flex items-center gap-2">
-                  <span className="font-mono font-bold text-sm text-blue-400">{item.case_id || item.project_id}</span>
+                  <span className="font-mono font-bold text-sm text-cyan-400">{item.case_id || item.project_id}</span>
                   <RiskBadge level={item.risk_level} />
                 </div>
-                <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-red-400 bg-red-950/80 px-2 py-1 rounded border border-red-800">
-                  <AlertTriangle className="w-3.5 h-3.5 text-red-400" />
-                  <span>{scorePct}% Risk</span>
+                <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-rose-300 bg-rose-950/80 px-2.5 py-1 rounded-full border border-rose-800 shadow-[0_0_8px_rgba(244,63,94,0.2)]">
+                  <Zap className="w-3.5 h-3.5 text-rose-400" />
+                  <span>{scorePct}% Risk Index</span>
                 </div>
               </div>
 
               {/* Title & Location */}
               <div>
-                <h3 className="font-bold text-gray-100 text-base">{item.project_name}</h3>
-                <p className="text-xs text-gray-400 flex items-center gap-1 mt-1 font-medium">
-                  <MapPin className="w-3.5 h-3.5 text-blue-400" />
-                  <span>{item.district} District &bull; {item.current_stage || item.stage} Stage</span>
+                <h3 className="font-display font-bold text-white text-base group-hover:text-cyan-300 transition-colors">
+                  {item.project_name}
+                </h3>
+                <p className="text-xs text-slate-400 flex items-center gap-1.5 mt-1 font-medium">
+                  <MapPin className="w-3.5 h-3.5 text-cyan-400" />
+                  <span>{item.district} District &bull; {item.current_stage || item.stage} Phase</span>
                 </p>
               </div>
 
-              {/* Risk Factors Grid */}
-              <div className="grid grid-cols-3 gap-2 bg-gray-950 p-3 rounded-lg border border-gray-800 text-xs">
+              {/* Risk Factors Telemetry Grid */}
+              <div className="grid grid-cols-3 gap-2 bg-slate-950 p-3 rounded-xl border border-white/5 text-xs font-mono">
                 <div>
-                  <span className="text-[10px] text-gray-500 font-medium block">Outlay</span>
-                  <span className="font-mono font-bold text-emerald-400">&#8377;{item.compensation_offered_cr} Cr</span>
+                  <span className="text-[10px] text-slate-500 block">CAPITAL OUTLAY</span>
+                  <span className="font-bold text-emerald-400">&#8377;{item.compensation_offered_cr} Cr</span>
                 </div>
                 <div>
-                  <span className="text-[10px] text-gray-500 font-medium block">Litigations</span>
-                  <span className="font-bold text-red-400 flex items-center gap-1">
-                    <Scale className="w-3 h-3 text-red-400" />
+                  <span className="text-[10px] text-slate-500 block">LITIGATION WRITS</span>
+                  <span className="font-bold text-rose-400 flex items-center gap-1">
+                    <Scale className="w-3 h-3 text-rose-400" />
                     {item.legal_cases_pending || 2} Writs
                   </span>
                 </div>
                 <div>
-                  <span className="text-[10px] text-gray-500 font-medium block">Agitations</span>
+                  <span className="text-[10px] text-slate-500 block">AGITATIONS</span>
                   <span className="font-bold text-amber-400 flex items-center gap-1">
                     <AlertTriangle className="w-3 h-3 text-amber-400" />
                     {item.local_protests_count || 3} logged
@@ -107,10 +115,10 @@ export default function AlertsPanel({ onSelectCase }) {
               {/* Action Button */}
               <button
                 onClick={() => onSelectCase(item)}
-                className="w-full py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-md font-semibold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer border border-blue-500 shadow-sm"
+                className="w-full py-2.5 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer border border-cyan-400/30 shadow-[0_0_15px_rgba(6,182,212,0.2)]"
               >
-                <Sparkles className="w-4 h-4 text-blue-200" />
-                <span>Launch SHAP Audit Briefing</span>
+                <Sparkles className="w-4 h-4 text-cyan-200" />
+                <span>Launch Full SHAP Audit Dossier</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </div>

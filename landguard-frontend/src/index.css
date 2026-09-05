@@ -1,15 +1,16 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --bg-dark: #0b0f19;
-  --card-bg: #111827;
-  --card-border: #1f2937;
-  --text-main: #f9fafb;
-  --text-muted: #9ca3af;
+  --bg-space: #060913;
+  --panel-bg: #0d1222;
+  --panel-border: rgba(255, 255, 255, 0.08);
+  --accent-cyan: #06b6d4;
+  --accent-blue: #3b82f6;
+  --accent-indigo: #6366f1;
 }
 
 * {
@@ -18,61 +19,119 @@
 
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background-color: #0b0f19;
-  color: #f9fafc;
+  background-color: #060913;
+  color: #f8fafc;
   min-height: 100vh;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+  background-image: 
+    radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.08) 0%, transparent 60%),
+    radial-gradient(circle at 90% 40%, rgba(6, 182, 212, 0.04) 0%, transparent 40%),
+    radial-gradient(circle at 10% 80%, rgba(99, 102, 241, 0.04) 0%, transparent 50%),
+    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 48px 48px, 48px 48px;
 }
 
-/* Custom Scrollbar */
+/* Custom Tactical Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0b0f19;
+  background: #060913;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1f2937;
-  border-radius: 3px;
+  background: #1e293b;
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #374151;
+  background: #334155;
 }
 
-/* Solid Enterprise Card Styles */
-.solid-card {
-  background-color: #111827;
-  border: 1px solid #1f2937;
-  border-radius: 0.75rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+/* Tactical Command Deck Cards */
+.art-card {
+  background: linear-gradient(180deg, rgba(17, 24, 39, 0.85) 0%, rgba(13, 18, 34, 0.95) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 0.875rem;
+  box-shadow: 
+    0 1px 2px 0 rgba(0, 0, 0, 0.05),
+    0 10px 25px -5px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  position: relative;
+  overflow: hidden;
 }
 
-.solid-card-hover {
-  transition: all 0.2s ease-in-out;
+.art-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.3), transparent);
 }
 
-.solid-card-hover:hover {
-  border-color: #374151;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+.art-card-glow {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Custom Leaflet Dark Container Styling */
+.art-card-glow:hover {
+  border-color: rgba(59, 130, 246, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 
+    0 20px 30px -10px rgba(0, 0, 0, 0.7),
+    0 0 20px -5px rgba(59, 130, 246, 0.15),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Monospace numerals */
+.num-mono {
+  font-family: 'JetBrains Mono', monospace;
+  font-feature-settings: 'tnum' on, 'zero' on;
+}
+
+/* Display font */
+.font-display {
+  font-family: 'Outfit', sans-serif;
+}
+
+/* Leaflet Container Customization */
 .leaflet-container {
   width: 100%;
   height: 100%;
-  border-radius: 0.75rem;
-  background: #111827 !important;
-  z-index: 10;
+  border-radius: 0.875rem;
+  background: #090d16 !important;
 }
 
 .leaflet-popup-content-wrapper, .leaflet-popup-tip {
-  background: #111827 !important;
-  color: #f9fafb !important;
-  border: 1px solid #374151;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.8);
+  background: #0f172a !important;
+  color: #f8fafc !important;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.85);
+  border-radius: 0.75rem;
+}
+
+/* Pulsing radar effect */
+@keyframes radar-pulse {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 0.3;
+  }
+  100% {
+    transform: scale(0.95);
+    opacity: 0.8;
+  }
+}
+
+.radar-ring {
+  animation: radar-pulse 2.5s infinite ease-in-out;
 }
