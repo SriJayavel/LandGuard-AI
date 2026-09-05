@@ -16,24 +16,24 @@ const CaseDetailModal = lazy(() => import('./components/CaseDetailModal'));
 // Table Skeleton fallback for instant zero-CLS paint
 const TableSkeleton = () => (
   <div className="space-y-3 animate-pulse">
-    <div className="cockpit-card p-3 rounded-lg flex justify-between items-center h-14 bg-[#0e1422]">
+    <div className="craft-panel p-4 rounded-xl flex justify-between items-center h-16 bg-[#0b0f19]">
       <div className="h-5 bg-slate-800 rounded w-64"></div>
       <div className="flex gap-2">
-        <div className="h-7 bg-slate-800 rounded w-24"></div>
-        <div className="h-7 bg-slate-800 rounded w-24"></div>
+        <div className="h-8 bg-slate-800 rounded w-24"></div>
+        <div className="h-8 bg-slate-800 rounded w-24"></div>
       </div>
     </div>
-    <div className="cockpit-card rounded-lg p-3 space-y-2 bg-[#0e1422]">
+    <div className="craft-panel rounded-xl p-4 space-y-2.5 bg-[#0b0f19]">
       {Array.from({ length: 6 }).map((_, i) => (
-        <div key={i} className="h-10 bg-[#090d16] rounded border border-white/5"></div>
+        <div key={i} className="h-10 bg-[#06080f] rounded-lg border border-white/5"></div>
       ))}
     </div>
   </div>
 );
 
 const ComponentLoader = ({ text }) => (
-  <div className="cockpit-card p-12 text-center rounded-lg space-y-2 my-3 bg-[#0e1422]">
-    <div className="w-7 h-7 border-3 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+  <div className="craft-panel p-16 text-center rounded-xl space-y-3 my-4 bg-[#0b0f19]">
+    <div className="w-8 h-8 border-3 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
     <p className="text-xs text-blue-400 font-mono font-medium">{text}</p>
   </div>
 );
@@ -78,54 +78,54 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen text-slate-100 font-sans flex flex-col antialiased bg-[#090d16]">
+    <div className="min-h-screen text-slate-100 font-sans flex flex-col antialiased bg-[#06080f]">
       {/* Main Container */}
-      <div className="relative z-10 flex-1 max-w-7xl w-full mx-auto px-4 py-5 space-y-4">
+      <div className="relative z-10 flex-1 max-w-7xl w-full mx-auto px-4 py-5 space-y-5">
         {/* Navigation & Header */}
         <Header activeTab={activeTab} setActiveTab={setActiveTab} stats={stats} />
 
-        {/* Tactical 4-Card KPI Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          <div className="cockpit-card p-3.5 rounded-lg flex items-center justify-between bg-[#0e1422] border border-white/5 shadow-sm">
-            <div className="space-y-0.5">
-              <span className="text-[10px] text-slate-400 font-mono block">PORTFOLIO VOLUME</span>
-              <span className="text-2xl font-black text-white font-mono-data leading-none block">{totalCases}</span>
+        {/* 4-Card Executive KPI Command Deck */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+          <div className="craft-panel craft-panel-hover p-4 rounded-xl flex items-center justify-between bg-[#0b0f19] border border-white/10 shadow-lg group">
+            <div className="space-y-1">
+              <span className="text-[11px] text-slate-400 font-mono block font-medium">PORTFOLIO CASES</span>
+              <span className="text-3xl font-display font-bold text-white font-mono-num leading-none block">{totalCases}</span>
               <span className="text-[10px] text-slate-500 font-mono">36 MAHARASHTRA DISTRICTS</span>
             </div>
-            <div className="bg-[#090d16] p-2.5 rounded-md border border-white/5 text-blue-400">
+            <div className="bg-[#06080f] p-3 rounded-xl border border-white/5 text-blue-400 group-hover:scale-110 transition-transform">
               <Building2 className="w-5 h-5" />
             </div>
           </div>
 
-          <div className="cockpit-card p-3.5 rounded-lg flex items-center justify-between bg-[#0e1422] border border-white/5 shadow-sm">
-            <div className="space-y-0.5">
-              <span className="text-[10px] text-slate-400 font-mono block">CRITICAL INJUNCTION RISK</span>
-              <span className="text-2xl font-black text-red-400 font-mono-data leading-none block">{highRiskCount}</span>
-              <span className="text-[10px] text-red-500/80 font-mono">HIGH COURT LITIGATIONS</span>
+          <div className="craft-panel craft-panel-hover p-4 rounded-xl flex items-center justify-between bg-[#0b0f19] border border-white/10 shadow-lg group">
+            <div className="space-y-1">
+              <span className="text-[11px] text-slate-400 font-mono block font-medium">CRITICAL RISK CASES</span>
+              <span className="text-3xl font-display font-bold text-red-400 font-mono-num leading-none block">{highRiskCount}</span>
+              <span className="text-[10px] text-red-500/80 font-mono">COURT WRITS & STAYS</span>
             </div>
-            <div className="bg-red-950/60 p-2.5 rounded-md border border-red-900/40 text-red-400">
+            <div className="bg-red-950/60 p-3 rounded-xl border border-red-900/40 text-red-400 group-hover:scale-110 transition-transform">
               <AlertOctagon className="w-5 h-5" />
             </div>
           </div>
 
-          <div className="cockpit-card p-3.5 rounded-lg flex items-center justify-between bg-[#0e1422] border border-white/5 shadow-sm">
-            <div className="space-y-0.5">
-              <span className="text-[10px] text-slate-400 font-mono block">CAPITAL AT STAKE</span>
-              <span className="text-2xl font-black text-emerald-400 font-mono-data leading-none block">&#8377;{totalCompCr} Cr</span>
-              <span className="text-[10px] text-slate-500 font-mono">STATUTORY RFCTLARR BUDGET</span>
+          <div className="craft-panel craft-panel-hover p-4 rounded-xl flex items-center justify-between bg-[#0b0f19] border border-white/10 shadow-lg group">
+            <div className="space-y-1">
+              <span className="text-[11px] text-slate-400 font-mono block font-medium">CAPITAL AT STAKE</span>
+              <span className="text-3xl font-display font-bold text-emerald-400 font-mono-num leading-none block">&#8377;{totalCompCr} Cr</span>
+              <span className="text-[10px] text-slate-500 font-mono">RFCTLARR STATUTORY OUTLAY</span>
             </div>
-            <div className="bg-emerald-950/60 p-2.5 rounded-md border border-emerald-900/40 text-emerald-400">
+            <div className="bg-emerald-950/60 p-3 rounded-xl border border-emerald-900/40 text-emerald-400 group-hover:scale-110 transition-transform">
               <Coins className="w-5 h-5" />
             </div>
           </div>
 
-          <div className="cockpit-card p-3.5 rounded-lg flex items-center justify-between bg-[#0e1422] border border-white/5 shadow-sm">
-            <div className="space-y-0.5">
-              <span className="text-[10px] text-slate-400 font-mono block">AI PREDICTIVE CONFIDENCE</span>
-              <span className="text-2xl font-black text-amber-400 font-mono-data leading-none block">{avgRiskScore}%</span>
-              <span className="text-[10px] text-slate-500 font-mono">LIGHTGBM AGGREGATE MEAN</span>
+          <div className="craft-panel craft-panel-hover p-4 rounded-xl flex items-center justify-between bg-[#0b0f19] border border-white/10 shadow-lg group">
+            <div className="space-y-1">
+              <span className="text-[11px] text-slate-400 font-mono block font-medium">AI PREDICTIVE RISK</span>
+              <span className="text-3xl font-display font-bold text-amber-400 font-mono-num leading-none block">{avgRiskScore}%</span>
+              <span className="text-[10px] text-slate-500 font-mono">LIGHTGBM ROC-AUC 75.8%</span>
             </div>
-            <div className="bg-amber-950/60 p-2.5 rounded-md border border-amber-900/40 text-amber-400">
+            <div className="bg-amber-950/60 p-3 rounded-xl border border-amber-900/40 text-amber-400 group-hover:scale-110 transition-transform">
               <TrendingUp className="w-5 h-5" />
             </div>
           </div>
@@ -133,13 +133,13 @@ function App() {
 
         {/* Global Error Notifications */}
         {error && (
-          <div className="cockpit-card p-5 rounded-lg border border-red-800 bg-red-950/40 text-center space-y-2">
-            <AlertTriangle className="w-7 h-7 text-red-400 mx-auto" />
+          <div className="craft-panel p-6 rounded-xl border border-red-800 bg-red-950/40 text-center space-y-3">
+            <AlertTriangle className="w-8 h-8 text-red-400 mx-auto" />
             <h3 className="text-sm font-bold text-red-300">Backend Connection Warning</h3>
             <p className="text-xs text-slate-300 max-w-lg mx-auto">{error}</p>
             <button
               onClick={fetchCasesData}
-              className="px-3.5 py-1.5 bg-red-700 hover:bg-red-600 text-white rounded text-xs font-semibold inline-flex items-center gap-2 transition-colors shadow-sm cursor-pointer"
+              className="px-4 py-2 bg-red-700 hover:bg-red-600 text-white rounded-lg text-xs font-semibold inline-flex items-center gap-2 transition-colors shadow-sm cursor-pointer"
             >
               <RefreshCw className="w-3.5 h-3.5" />
               Retry Connection
@@ -160,7 +160,7 @@ function App() {
             </Suspense>
           )}
           {activeTab === 'alerts' && (
-            <Suspense fallback={<ComponentLoader text="SCANNING EARLY WARNING MATRIX..." />}>
+            <Suspense fallback={<ComponentLoader text="SCANNING EARLY WARNING RADAR MATRIX..." />}>
               <AlertsPanel onSelectCase={(c) => setSelectedCase(c)} />
             </Suspense>
           )}
@@ -179,8 +179,8 @@ function App() {
         </Suspense>
       )}
 
-      {/* Cockpit Footer */}
-      <footer className="border-t border-white/5 py-4 px-6 mt-10 bg-[#090d16]">
+      {/* Footer */}
+      <footer className="border-t border-white/5 py-4 px-6 mt-12 bg-[#06080f]">
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between text-xs text-slate-500 gap-3 font-mono text-[11px]">
           <div className="flex items-center gap-2">
             <Cpu className="w-3.5 h-3.5 text-blue-400" />
@@ -191,7 +191,7 @@ function App() {
             <span className="text-slate-400">TEAM CYBERLEEK</span>
           </div>
           <p className="text-slate-600">
-            PROPRIETARY PREDICTIVE ACQUISITION GOVERNANCE SYSTEM &bull; STRICTLY CONFIDENTIAL
+            PREDICTIVE ACQUISITION GOVERNANCE SYSTEM &bull; CONFIDENTIAL
           </p>
         </div>
       </footer>

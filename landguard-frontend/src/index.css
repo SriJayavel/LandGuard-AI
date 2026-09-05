@@ -1,20 +1,20 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* UI Pro Max Design System Tokens - Data-Dense Cockpit */
 :root {
-  --cockpit-bg: #090d16;
-  --cockpit-surface: #0e1422;
-  --cockpit-elevated: #131a2c;
-  --cockpit-border: rgba(255, 255, 255, 0.08);
-  --cockpit-border-subtle: rgba(255, 255, 255, 0.04);
-  --color-primary: #2563eb;
-  --color-critical: #dc2626;
-  --color-elevated: #d97706;
-  --color-stable: #059669;
+  --bg-main: #06080f;
+  --panel-bg: #0b0f19;
+  --panel-elevated: #111726;
+  --border-subtle: rgba(255, 255, 255, 0.07);
+  --border-strong: rgba(255, 255, 255, 0.14);
+  --accent-blue: #3b82f6;
+  --accent-cyan: #06b6d4;
+  --accent-red: #ef4444;
+  --accent-amber: #f59e0b;
+  --accent-green: #10b981;
 }
 
 * {
@@ -22,77 +22,78 @@
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background-color: #090d16;
-  color: #f1f5f9;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: #06080f;
+  color: #f8fafc;
   min-height: 100vh;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
-  /* Engineering graph lines */
   background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-  background-size: 32px 32px;
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(59, 130, 246, 0.12), transparent),
+    linear-gradient(to right, rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+  background-size: 100% 100%, 40px 40px, 40px 40px;
 }
 
 /* Tabular Numerals & Monospace */
-.font-mono-data {
+.font-mono-num {
   font-family: 'JetBrains Mono', monospace;
   font-feature-settings: 'tnum' on, 'zero' on;
 }
 
-.font-heading {
-  font-family: 'Outfit', 'Inter', sans-serif;
+.font-display {
+  font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
 }
 
-/* Custom Tactical Scrollbar */
+/* Linear-style Scrollbar */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #090d16;
+  background: #06080f;
 }
 
 ::-webkit-scrollbar-thumb {
   background: #1e293b;
-  border-radius: 2px;
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: #334155;
 }
 
-/* High-Density Cockpit Panels */
-.cockpit-card {
-  background: #0e1422;
+/* High-Precision Craft Panels */
+.craft-panel {
+  background: #0b0f19;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 0.625rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
 }
 
-.cockpit-card-hover {
-  transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+.craft-panel-hover {
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.cockpit-card-hover:hover {
-  border-color: rgba(37, 99, 235, 0.4);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+.craft-panel-hover:hover {
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 10px 30px -4px rgba(0, 0, 0, 0.7);
+  transform: translateY(-1px);
 }
 
-/* Custom Leaflet Dark Container Styling */
+/* Leaflet Container Customization */
 .leaflet-container {
   width: 100%;
   height: 100%;
-  border-radius: 0.625rem;
-  background: #090d16 !important;
+  border-radius: 0.75rem;
+  background: #06080f !important;
 }
 
 .leaflet-popup-content-wrapper, .leaflet-popup-tip {
-  background: #0e1422 !important;
-  color: #f1f5f9 !important;
+  background: #0b0f19 !important;
+  color: #f8fafc !important;
   border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.85);
-  border-radius: 0.5rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.9);
+  border-radius: 0.625rem;
 }
