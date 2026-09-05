@@ -1,16 +1,20 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* UI Pro Max Design System Tokens - Data-Dense Cockpit */
 :root {
-  --bg-space: #060913;
-  --panel-bg: #0d1222;
-  --panel-border: rgba(255, 255, 255, 0.08);
-  --accent-cyan: #06b6d4;
-  --accent-blue: #3b82f6;
-  --accent-indigo: #6366f1;
+  --cockpit-bg: #090d16;
+  --cockpit-surface: #0e1422;
+  --cockpit-elevated: #131a2c;
+  --cockpit-border: rgba(255, 255, 255, 0.08);
+  --cockpit-border-subtle: rgba(255, 255, 255, 0.04);
+  --color-primary: #2563eb;
+  --color-critical: #dc2626;
+  --color-elevated: #d97706;
+  --color-stable: #059669;
 }
 
 * {
@@ -19,18 +23,26 @@
 
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background-color: #060913;
-  color: #f8fafc;
+  background-color: #090d16;
+  color: #f1f5f9;
   min-height: 100vh;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+  /* Engineering graph lines */
   background-image: 
-    radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.08) 0%, transparent 60%),
-    radial-gradient(circle at 90% 40%, rgba(6, 182, 212, 0.04) 0%, transparent 40%),
-    radial-gradient(circle at 10% 80%, rgba(99, 102, 241, 0.04) 0%, transparent 50%),
     linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-  background-size: 100% 100%, 100% 100%, 100% 100%, 48px 48px, 48px 48px;
+  background-size: 32px 32px;
+}
+
+/* Tabular Numerals & Monospace */
+.font-mono-data {
+  font-family: 'JetBrains Mono', monospace;
+  font-feature-settings: 'tnum' on, 'zero' on;
+}
+
+.font-heading {
+  font-family: 'Outfit', 'Inter', sans-serif;
 }
 
 /* Custom Tactical Scrollbar */
@@ -40,98 +52,47 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #060913;
+  background: #090d16;
 }
 
 ::-webkit-scrollbar-thumb {
   background: #1e293b;
-  border-radius: 4px;
+  border-radius: 2px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: #334155;
 }
 
-/* Tactical Command Deck Cards */
-.art-card {
-  background: linear-gradient(180deg, rgba(17, 24, 39, 0.85) 0%, rgba(13, 18, 34, 0.95) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 0.875rem;
-  box-shadow: 
-    0 1px 2px 0 rgba(0, 0, 0, 0.05),
-    0 10px 25px -5px rgba(0, 0, 0, 0.5),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(12px);
-  position: relative;
-  overflow: hidden;
+/* High-Density Cockpit Panels */
+.cockpit-card {
+  background: #0e1422;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.625rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
-.art-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.3), transparent);
+.cockpit-card-hover {
+  transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-.art-card-glow {
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+.cockpit-card-hover:hover {
+  border-color: rgba(37, 99, 235, 0.4);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
 }
 
-.art-card-glow:hover {
-  border-color: rgba(59, 130, 246, 0.4);
-  transform: translateY(-2px);
-  box-shadow: 
-    0 20px 30px -10px rgba(0, 0, 0, 0.7),
-    0 0 20px -5px rgba(59, 130, 246, 0.15),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
-}
-
-/* Monospace numerals */
-.num-mono {
-  font-family: 'JetBrains Mono', monospace;
-  font-feature-settings: 'tnum' on, 'zero' on;
-}
-
-/* Display font */
-.font-display {
-  font-family: 'Outfit', sans-serif;
-}
-
-/* Leaflet Container Customization */
+/* Custom Leaflet Dark Container Styling */
 .leaflet-container {
   width: 100%;
   height: 100%;
-  border-radius: 0.875rem;
+  border-radius: 0.625rem;
   background: #090d16 !important;
 }
 
 .leaflet-popup-content-wrapper, .leaflet-popup-tip {
-  background: #0f172a !important;
-  color: #f8fafc !important;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.85);
-  border-radius: 0.75rem;
-}
-
-/* Pulsing radar effect */
-@keyframes radar-pulse {
-  0% {
-    transform: scale(0.95);
-    opacity: 0.8;
-  }
-  50% {
-    transform: scale(1.15);
-    opacity: 0.3;
-  }
-  100% {
-    transform: scale(0.95);
-    opacity: 0.8;
-  }
-}
-
-.radar-ring {
-  animation: radar-pulse 2.5s infinite ease-in-out;
+  background: #0e1422 !important;
+  color: #f1f5f9 !important;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.85);
+  border-radius: 0.5rem;
 }

@@ -2,7 +2,7 @@ import React, { useState, useMemo, useRef, useEffect } from 'react';
 import RiskBadge from './RiskBadge';
 import {
   Search, ArrowUpDown, Sparkles, MapPin, Building2,
-  Filter, Check, ChevronRight, SlidersHorizontal, Hash
+  Filter, ChevronRight, Hash, Layers
 } from 'lucide-react';
 
 export default function ProjectsTable({ cases = [], projects = [], onSelectCase, onSelectProject, loading }) {
@@ -20,7 +20,7 @@ export default function ProjectsTable({ cases = [], projects = [], onSelectCase,
   const stages = ['All', 'Section 11 Notification', 'SIA Clearance', 'Section 19 Declaration', 'Award Inquiry', 'Compensation Payment', 'Land Possession'];
   const risks = ['All', 'High', 'Medium', 'Low'];
 
-  // Global keydown listener for '/' search shortcut
+  // Global '/' keyboard search focus
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === '/' && document.activeElement !== searchInputRef.current) {
@@ -57,21 +57,21 @@ export default function ProjectsTable({ cases = [], projects = [], onSelectCase,
 
   if (loading) {
     return (
-      <div className="art-card p-16 text-center rounded-2xl space-y-3">
-        <div className="w-10 h-10 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin mx-auto shadow-[0_0_15px_#06b6d4]"></div>
-        <p className="text-xs text-cyan-300 font-mono font-medium animate-pulse">STREAMING TELEMETRY FOR 600 ACQUISITION CASES...</p>
+      <div className="cockpit-card p-12 text-center rounded-lg space-y-3">
+        <div className="w-8 h-8 border-3 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+        <p className="text-xs text-blue-400 font-mono font-medium">STREAMING 600 ACQUISITION CASES...</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-4">
-      {/* Control Studio */}
-      <div className="art-card p-5 rounded-2xl space-y-4">
-        {/* District Quick-Filter Chips */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none text-xs">
+    <div className="space-y-3">
+      {/* Search & Filter Control Bar */}
+      <div className="cockpit-card p-3.5 rounded-lg space-y-3 bg-[#0e1422]">
+        {/* District Quick-Filter Pills */}
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs">
           <span className="text-slate-500 font-mono text-[11px] uppercase tracking-wider flex items-center gap-1 shrink-0 mr-1">
-            <MapPin className="w-3.5 h-3.5 text-cyan-400" /> District:
+            <MapPin className="w-3.5 h-3.5 text-blue-400" /> District:
           </span>
           {districts.map((d) => {
             const isSelected = selectedDistrict === d;
@@ -80,14 +80,14 @@ export default function ProjectsTable({ cases = [], projects = [], onSelectCase,
               <button
                 key={d}
                 onClick={() => setSelectedDistrict(d)}
-                className={`px-3 py-1.5 rounded-lg font-mono text-xs transition-all duration-150 shrink-0 flex items-center gap-1.5 cursor-pointer ${
+                className={`px-2.5 py-1 rounded font-mono text-xs transition-colors shrink-0 flex items-center gap-1.5 cursor-pointer ${
                   isSelected
-                    ? 'bg-blue-600 text-white font-bold shadow-[0_0_12px_rgba(37,99,235,0.4)] border border-cyan-400/40'
-                    : 'bg-slate-950/80 text-slate-400 hover:text-slate-200 hover:bg-slate-900 border border-white/5'
+                    ? 'bg-blue-600 text-white font-bold border border-blue-400/40 shadow-sm'
+                    : 'bg-[#090d16] text-slate-400 hover:text-slate-200 border border-white/5'
                 }`}
               >
                 <span>{d}</span>
-                <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${isSelected ? 'bg-white/20 text-white' : 'bg-slate-800 text-slate-400'}`}>
+                <span className={`text-[10px] px-1.5 py-0.2 rounded ${isSelected ? 'bg-white/20 text-white' : 'bg-slate-800 text-slate-400'}`}>
                   {count}
                 </span>
               </button>
@@ -95,18 +95,18 @@ export default function ProjectsTable({ cases = [], projects = [], onSelectCase,
           })}
         </div>
 
-        {/* Search & Secondary Filter Row */}
-        <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-white/5">
+        {/* Search & Selectors Row */}
+        <div className="flex flex-wrap items-center justify-between gap-2.5 pt-2 border-t border-white/5">
           {/* Search Box */}
           <div className="relative flex-1 min-w-[280px]">
-            <Search className="w-4 h-4 text-cyan-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               ref={searchInputRef}
               type="text"
               placeholder="Search Case ID (e.g. LA-1001), District, or Infrastructure Corridor... (Press /)"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-slate-950 text-slate-100 placeholder-slate-500 text-xs pl-10 pr-4 py-2.5 rounded-xl border border-white/10 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/50 transition-all font-mono shadow-inner"
+              className="w-full bg-[#090d16] text-slate-100 placeholder-slate-500 text-xs pl-9 pr-3 py-1.5 rounded-md border border-white/10 focus:outline-none focus:border-blue-500 font-mono"
             />
           </div>
 
@@ -115,7 +115,7 @@ export default function ProjectsTable({ cases = [], projects = [], onSelectCase,
             <select
               value={selectedStage}
               onChange={(e) => setSelectedStage(e.target.value)}
-              className="bg-slate-950 text-slate-300 px-3.5 py-2.5 rounded-xl border border-white/10 focus:outline-none focus:border-cyan-500 font-medium cursor-pointer max-w-[170px] truncate"
+              className="bg-[#090d16] text-slate-300 px-2.5 py-1.5 rounded-md border border-white/10 focus:outline-none focus:border-blue-500 font-medium cursor-pointer max-w-[170px] truncate"
             >
               {stages.map((s) => (
                 <option key={s} value={s}>Stage: {s}</option>
@@ -126,97 +126,96 @@ export default function ProjectsTable({ cases = [], projects = [], onSelectCase,
             <select
               value={selectedRisk}
               onChange={(e) => setSelectedRisk(e.target.value)}
-              className="bg-slate-950 text-slate-300 px-3.5 py-2.5 rounded-xl border border-white/10 focus:outline-none focus:border-cyan-500 font-medium cursor-pointer"
+              className="bg-[#090d16] text-slate-300 px-2.5 py-1.5 rounded-md border border-white/10 focus:outline-none focus:border-blue-500 font-medium cursor-pointer"
             >
               {risks.map((r) => (
                 <option key={r} value={r}>Risk: {r}</option>
               ))}
             </select>
 
-            {/* Score Sort Toggle */}
+            {/* Sort Toggle */}
             <button
               onClick={() => setSortAsc(!sortAsc)}
-              className="bg-slate-900 hover:bg-slate-800 text-slate-200 font-semibold px-3.5 py-2.5 rounded-xl border border-white/10 flex items-center gap-1.5 transition-all cursor-pointer font-mono"
+              className="bg-[#090d16] hover:bg-slate-900 text-slate-200 font-semibold px-2.5 py-1.5 rounded-md border border-white/10 flex items-center gap-1.5 transition-colors cursor-pointer font-mono"
             >
-              <ArrowUpDown className="w-3.5 h-3.5 text-cyan-400" />
+              <ArrowUpDown className="w-3.5 h-3.5 text-blue-400" />
               <span>Score ({sortAsc ? 'Asc' : 'Desc'})</span>
             </button>
           </div>
         </div>
       </div>
 
-      {/* Main High-Precision Data Table */}
-      <div className="art-card rounded-2xl overflow-hidden shadow-2xl">
+      {/* Main High-Density Table */}
+      <div className="cockpit-card rounded-lg overflow-hidden shadow-xl bg-[#0e1422]">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs border-collapse">
             <thead>
-              <tr className="bg-slate-950/90 text-slate-400 border-b border-white/10 font-bold uppercase tracking-wider font-mono">
-                <th className="py-4 px-5">Case Identifier</th>
-                <th className="py-4 px-5">Infrastructure Project & District</th>
-                <th className="py-4 px-5">Statutory Phase</th>
-                <th className="py-4 px-5">Risk Matrix</th>
-                <th className="py-4 px-5">Predicted Delay Probability</th>
-                <th className="py-4 px-5">Budget Outlay</th>
-                <th className="py-4 px-5 text-right">Audit Action</th>
+              <tr className="bg-[#090d16] text-slate-400 border-b border-white/10 font-bold uppercase tracking-wider font-mono text-[11px]">
+                <th className="py-3 px-4">Case ID</th>
+                <th className="py-3 px-4">Infrastructure Project & District</th>
+                <th className="py-3 px-4">Statutory Stage</th>
+                <th className="py-3 px-4">Risk Level</th>
+                <th className="py-3 px-4">Predicted Delay Probability</th>
+                <th className="py-3 px-4">Budget Outlay</th>
+                <th className="py-3 px-4 text-right">Audit Action</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5 font-sans">
               {filteredProjects.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="py-16 text-center text-slate-500 text-xs font-mono">
-                    NO ACTIVE CASES CORRESPONDING TO ACTIVE FILTER CRITERIA
+                  <td colSpan={7} className="py-12 text-center text-slate-500 text-xs font-mono">
+                    NO CASES MATCHING ACTIVE FILTER CRITERIA
                   </td>
                 </tr>
               ) : (
                 filteredProjects.map((p) => {
                   const scorePct = ((p.risk_score || 0) * 100).toFixed(1);
-                  const isHigh = p.risk_score >= 0.7;
-                  const isMed = p.risk_score >= 0.35 && p.risk_score < 0.7;
+                  const isCritical = p.risk_score >= 0.7;
+                  const isElevated = p.risk_score >= 0.35 && p.risk_score < 0.7;
 
                   return (
                     <tr
                       key={p.case_id || p.project_id}
-                      className="hover:bg-blue-950/20 transition-colors duration-150 group"
+                      className="hover:bg-blue-950/20 transition-colors duration-100 group"
                     >
-                      <td className="py-4 px-5 font-mono font-bold text-cyan-400 flex items-center gap-1.5">
-                        <Hash className="w-3 h-3 text-cyan-600" />
-                        <span>{p.case_id || p.project_id}</span>
+                      <td className="py-3 px-4 font-mono font-bold text-blue-400">
+                        {p.case_id || p.project_id}
                       </td>
 
-                      <td className="py-4 px-5">
-                        <div className="font-bold text-slate-100 group-hover:text-cyan-300 transition-colors">
+                      <td className="py-3 px-4">
+                        <div className="font-bold text-slate-100 group-hover:text-blue-400 transition-colors">
                           {p.project_name || `${p.district} Infrastructure Project`}
                         </div>
                         <div className="text-[11px] text-slate-400 flex items-center gap-1 mt-0.5 font-medium">
-                          <MapPin className="w-3 h-3 text-cyan-400" />
+                          <MapPin className="w-3 h-3 text-blue-400" />
                           <span>{p.district} District &bull; Maharashtra</span>
                         </div>
                       </td>
 
-                      <td className="py-4 px-5 text-slate-300 font-medium">
-                        <span className="px-2.5 py-1 rounded-md bg-slate-950 text-slate-300 border border-white/5 font-mono text-[11px]">
+                      <td className="py-3 px-4 text-slate-300 font-medium">
+                        <span className="px-2 py-0.5 rounded bg-[#090d16] text-slate-300 border border-white/5 font-mono text-[11px]">
                           {p.current_stage || p.stage}
                         </span>
                       </td>
 
-                      <td className="py-4 px-5">
+                      <td className="py-3 px-4">
                         <RiskBadge level={p.risk_level} />
                       </td>
 
-                      <td className="py-4 px-5">
-                        <div className="space-y-1.5 w-32">
+                      <td className="py-3 px-4">
+                        <div className="space-y-1 w-28">
                           <div className="flex items-center justify-between text-[11px] font-mono">
-                            <span className={`font-bold ${isHigh ? 'text-rose-400' : isMed ? 'text-amber-400' : 'text-emerald-400'}`}>
+                            <span className={`font-bold ${isCritical ? 'text-red-400' : isElevated ? 'text-amber-400' : 'text-emerald-400'}`}>
                               {scorePct}%
                             </span>
-                            <span className="text-[10px] text-slate-500">XGB-Tree</span>
+                            <span className="text-[10px] text-slate-500">LightGBM</span>
                           </div>
-                          <div className="w-full bg-slate-950 rounded-full h-1.5 overflow-hidden border border-white/5">
+                          <div className="w-full bg-[#090d16] rounded-full h-1.5 overflow-hidden border border-white/5">
                             <div
-                              className={`h-full rounded-full transition-all duration-300 ${
-                                isHigh ? 'bg-gradient-to-r from-rose-600 to-rose-400 shadow-[0_0_8px_#f43f5e]' :
-                                isMed ? 'bg-gradient-to-r from-amber-600 to-amber-400' :
-                                'bg-gradient-to-r from-emerald-600 to-emerald-400'
+                              className={`h-full rounded-full transition-all duration-200 ${
+                                isCritical ? 'bg-red-500' :
+                                isElevated ? 'bg-amber-500' :
+                                'bg-emerald-500'
                               }`}
                               style={{ width: `${Math.min(100, Math.max(5, p.risk_score * 100))}%` }}
                             ></div>
@@ -224,16 +223,16 @@ export default function ProjectsTable({ cases = [], projects = [], onSelectCase,
                         </div>
                       </td>
 
-                      <td className="py-4 px-5 font-mono font-bold text-emerald-400">
+                      <td className="py-3 px-4 font-mono font-bold text-emerald-400 text-xs">
                         &#8377;{p.compensation_offered_cr} Cr
                       </td>
 
-                      <td className="py-4 px-5 text-right">
+                      <td className="py-3 px-4 text-right">
                         <button
                           onClick={() => handleSelect(p)}
-                          className="py-1.5 px-3.5 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white rounded-lg font-bold text-xs inline-flex items-center gap-1.5 transition-all shadow-[0_0_12px_rgba(6,182,212,0.25)] cursor-pointer border border-cyan-400/30 group-hover:scale-105"
+                          className="py-1.5 px-3 bg-blue-600 hover:bg-blue-500 text-white rounded font-semibold text-xs inline-flex items-center gap-1.5 transition-colors cursor-pointer border border-blue-400/40 shadow-sm"
                         >
-                          <Sparkles className="w-3.5 h-3.5 text-cyan-200" />
+                          <Sparkles className="w-3.5 h-3.5 text-blue-200" />
                           <span>SHAP Audit</span>
                         </button>
                       </td>
@@ -245,10 +244,10 @@ export default function ProjectsTable({ cases = [], projects = [], onSelectCase,
           </table>
         </div>
 
-        {/* Table Footer Status Bar */}
-        <div className="p-3 bg-slate-950 border-t border-white/5 flex items-center justify-between text-xs text-slate-500 font-mono px-5">
-          <span>SHOWING {filteredProjects.length} OF {dataList.length} MONITORED CASES</span>
-          <span>RFCTLARR ACT 2013 STATUTORY BENCHMARK</span>
+        {/* Table Status Bar */}
+        <div className="p-2.5 bg-[#090d16] border-t border-white/5 flex items-center justify-between text-[11px] text-slate-500 font-mono px-4">
+          <span>MONITORING {filteredProjects.length} OF {dataList.length} ACQUISITION CASES</span>
+          <span>STATUTORY BENCHMARK: RFCTLARR ACT 2013</span>
         </div>
       </div>
     </div>
