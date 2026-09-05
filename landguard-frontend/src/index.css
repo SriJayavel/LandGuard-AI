@@ -1,20 +1,24 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --bg-main: #06080f;
-  --panel-bg: #0b0f19;
-  --panel-elevated: #111726;
-  --border-subtle: rgba(255, 255, 255, 0.07);
-  --border-strong: rgba(255, 255, 255, 0.14);
-  --accent-blue: #3b82f6;
-  --accent-cyan: #06b6d4;
-  --accent-red: #ef4444;
-  --accent-amber: #f59e0b;
-  --accent-green: #10b981;
+  --bg-app: #F5F7FA;
+  --bg-card: #FFFFFF;
+  --text-primary: #172033;
+  --text-secondary: #667085;
+  --border-color: #D9E1EA;
+  --navy-primary: #123B63;
+  --blue-primary: #1769AA;
+  --blue-secondary: #2F80C0;
+  
+  /* Semantic Risk Colors */
+  --risk-low: #16A34A;
+  --risk-medium: #D97706;
+  --risk-high: #EA580C;
+  --risk-critical: #DC2626;
 }
 
 * {
@@ -22,78 +26,80 @@
 }
 
 body {
-  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-  background-color: #06080f;
-  color: #f8fafc;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: #F5F7FA;
+  color: #172033;
   min-height: 100vh;
-  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
   -webkit-font-smoothing: antialiased;
-  background-image: 
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(59, 130, 246, 0.12), transparent),
-    linear-gradient(to right, rgba(255, 255, 255, 0.015) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
-  background-size: 100% 100%, 40px 40px, 40px 40px;
 }
 
-/* Tabular Numerals & Monospace */
+/* Tabular Monospace Numerals for Data Figures */
 .font-mono-num {
   font-family: 'JetBrains Mono', monospace;
   font-feature-settings: 'tnum' on, 'zero' on;
 }
 
-.font-display {
-  font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+/* Institutional Enterprise Cards */
+.gov-card {
+  background-color: #FFFFFF;
+  border: 1px solid #D9E1EA;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.04), 0 1px 2px rgba(16, 24, 40, 0.02);
 }
 
-/* Linear-style Scrollbar */
+.gov-card-interactive {
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.gov-card-interactive:hover {
+  border-color: #CBD5E1;
+  box-shadow: 0 4px 6px -2px rgba(16, 24, 40, 0.05), 0 2px 4px -2px rgba(16, 24, 40, 0.03);
+}
+
+/* Leaflet Container - Clean Light Institutional Map */
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  background: #F8FAFC !important;
+  font-family: 'Inter', sans-serif;
+}
+
+.leaflet-popup-content-wrapper {
+  background: #FFFFFF !important;
+  color: #172033 !important;
+  border: 1px solid #D9E1EA;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  padding: 2px;
+}
+
+.leaflet-popup-tip {
+  background: #FFFFFF !important;
+}
+
+/* Clean Form Controls */
+input, select {
+  font-family: 'Inter', sans-serif;
+}
+
+/* Clean Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #06080f;
+  background: #F1F5F9;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
+  background: #CBD5E1;
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
-}
-
-/* High-Precision Craft Panels */
-.craft-panel {
-  background: #0b0f19;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 0.75rem;
-  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
-}
-
-.craft-panel-hover {
-  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.craft-panel-hover:hover {
-  border-color: rgba(255, 255, 255, 0.18);
-  box-shadow: 0 10px 30px -4px rgba(0, 0, 0, 0.7);
-  transform: translateY(-1px);
-}
-
-/* Leaflet Container Customization */
-.leaflet-container {
-  width: 100%;
-  height: 100%;
-  border-radius: 0.75rem;
-  background: #06080f !important;
-}
-
-.leaflet-popup-content-wrapper, .leaflet-popup-tip {
-  background: #0b0f19 !important;
-  color: #f8fafc !important;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.9);
-  border-radius: 0.625rem;
+  background: #94A3B8;
 }

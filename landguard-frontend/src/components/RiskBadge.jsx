@@ -1,34 +1,39 @@
 import React from 'react';
-import { AlertCircle, AlertTriangle, CheckCircle2 } from 'lucide-react';
 
 export default function RiskBadge({ level }) {
-  const normLevel = (level || 'Low').toString().trim();
+  const normLevel = (level || 'Low').toString().trim().toUpperCase();
 
-  if (normLevel === 'High') {
+  if (normLevel === 'CRITICAL' || normLevel === 'HIGH RISK') {
     return (
-      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold uppercase tracking-wider bg-red-500/10 text-red-400 border border-red-500/30">
-        <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-ping"></span>
-        <AlertCircle className="w-3 h-3 text-red-400" />
-        <span>Critical</span>
+      <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-red-50 text-red-700 border border-red-200">
+        <span className="w-1.5 h-1.5 rounded-full bg-red-600 mr-1.5"></span>
+        CRITICAL
       </span>
     );
   }
 
-  if (normLevel === 'Medium') {
+  if (normLevel === 'HIGH') {
     return (
-      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold uppercase tracking-wider bg-amber-500/10 text-amber-400 border border-amber-500/30">
-        <span className="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
-        <AlertTriangle className="w-3 h-3 text-amber-400" />
-        <span>Elevated</span>
+      <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-orange-50 text-orange-700 border border-orange-200">
+        <span className="w-1.5 h-1.5 rounded-full bg-orange-500 mr-1.5"></span>
+        HIGH
+      </span>
+    );
+  }
+
+  if (normLevel === 'MEDIUM') {
+    return (
+      <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+        <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mr-1.5"></span>
+        MEDIUM
       </span>
     );
   }
 
   return (
-    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
-      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-      <CheckCircle2 className="w-3 h-3 text-emerald-400" />
-      <span>Stable</span>
+    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+      <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 mr-1.5"></span>
+      LOW
     </span>
   );
 }
