@@ -39,6 +39,7 @@ FRIENDLY_NAMES = {
     'stage_enc': 'Acquisition Stage Bottleneck',
 }
 
+
 def score_row(row):
     r = row.copy()
     for c in ['district', 'stage']:
