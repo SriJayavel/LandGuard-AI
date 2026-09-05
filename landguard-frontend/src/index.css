@@ -1,24 +1,102 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ==========================================================================
+   LANDGUARD AI &bull; ENTERPRISE GOVERNMENT DECISION-SUPPORT SYSTEM
+   RFCTLARR Act 2013 | State of Maharashtra | Problem Statement 26017
+   ========================================================================== */
+
 :root {
-  --bg-app: #F5F7FA;
-  --bg-card: #FFFFFF;
-  --text-primary: #172033;
-  --text-secondary: #667085;
-  --border-color: #D9E1EA;
-  --navy-primary: #123B63;
-  --blue-primary: #1769AA;
-  --blue-secondary: #2F80C0;
-  
-  /* Semantic Risk Colors */
-  --risk-low: #16A34A;
-  --risk-medium: #D97706;
-  --risk-high: #EA580C;
+  /* Canvas & Surfaces (Light Benchmark) */
+  --bg-app: #F8FAFC;
+  --bg-sidebar: #FFFFFF;
+  --bg-surface: #FFFFFF;
+  --bg-surface-elevated: #F1F5F9;
+  --bg-surface-subtle: #F8FAFC;
+  --border-color: #E2E8F0;
+  --border-color-strong: #CBD5E1;
+
+  /* Institutional Typography */
+  --text-primary: #0F172A;
+  --text-secondary: #475569;
+  --text-muted: #64748B;
+  --text-subtle: #94A3B8;
+
+  /* Sovereign Government Brand Palette (Blue-First, Neutral-Dominant) */
+  --navy-brand: #0F2942;
+  --blue-primary: #1D4ED8;
+  --blue-hover: #1E40AF;
+  --blue-subtle: #EFF6FF;
+  --blue-border: #BFDBFE;
+
+  /* Semantic Risk Palette (Used only when communicating risk) */
   --risk-critical: #DC2626;
+  --risk-critical-bg: #FEF2F2;
+  --risk-critical-border: #FECACA;
+  --risk-critical-text: #B91C1C;
+
+  --risk-elevated: #D97706;
+  --risk-elevated-bg: #FFFBEB;
+  --risk-elevated-border: #FDE68A;
+  --risk-elevated-text: #B45309;
+
+  --risk-stable: #16A34A;
+  --risk-stable-bg: #F0FDF4;
+  --risk-stable-border: #BBF7D0;
+  --risk-stable-text: #15803D;
+
+  /* Restrained Shadows */
+  --shadow-xs: 0 1px 2px 0 rgba(15, 23, 42, 0.04);
+  --shadow-sm: 0 1px 3px 0 rgba(15, 23, 42, 0.06), 0 1px 2px -1px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.07), 0 2px 4px -2px rgba(15, 23, 42, 0.05);
+}
+
+.dark {
+  /* Restrained Institutional Dark Palette (Charcoal / Slate, NOT Cyan / Neon) */
+  --bg-app: #0B1118;
+  --bg-sidebar: #0D141D;
+  --bg-surface: #111A24;
+  --bg-surface-elevated: #151F2B;
+  --bg-surface-subtle: #0E1620;
+  --border-color: #263342;
+  --border-color-strong: #374759;
+
+  /* Typography */
+  --text-primary: #F3F6FA;
+  --text-secondary: #9AA8B8;
+  --text-muted: #6F7D8D;
+  --text-subtle: #4D5B6B;
+
+  /* Brand Palette (Restrained Blue, No Cyan) */
+  --navy-brand: #F3F6FA;
+  --blue-primary: #3B82F6;
+  --blue-hover: #60A5FA;
+  --blue-subtle: rgba(59, 130, 246, 0.12);
+  --blue-border: rgba(59, 130, 246, 0.3);
+
+  /* Semantic Risk Palette in Dark Mode */
+  --risk-critical: #EF4444;
+  --risk-critical-bg: rgba(239, 68, 68, 0.12);
+  --risk-critical-border: rgba(239, 68, 68, 0.3);
+  --risk-critical-text: #FCA5A5;
+
+  --risk-elevated: #F59E0B;
+  --risk-elevated-bg: rgba(245, 158, 11, 0.12);
+  --risk-elevated-border: rgba(245, 158, 11, 0.3);
+  --risk-elevated-text: #FDE68A;
+
+  --risk-stable: #22C55E;
+  --risk-stable-bg: rgba(34, 197, 94, 0.12);
+  --risk-stable-border: rgba(34, 197, 94, 0.3);
+  --risk-stable-text: #86EFAC;
+
+  /* Shadows (Zero Glow) */
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.35);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px -1px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.45);
 }
 
 * {
@@ -26,80 +104,105 @@
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background-color: #F5F7FA;
-  color: #172033;
+  font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--bg-app);
+  color: var(--text-primary);
   min-height: 100vh;
   margin: 0;
   padding: 0;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.15s ease, color 0.15s ease;
 }
 
-/* Tabular Monospace Numerals for Data Figures */
+/* Tabular Monospace Numerals for Currency, Percentages, and Metrics */
 .font-mono-num {
   font-family: 'JetBrains Mono', monospace;
   font-feature-settings: 'tnum' on, 'zero' on;
+  font-variant-numeric: tabular-nums;
 }
 
-/* Institutional Enterprise Cards */
+/* Institutional Enterprise Cards (Subtle borders, zero glow) */
 .gov-card {
-  background-color: #FFFFFF;
-  border: 1px solid #D9E1EA;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.04), 0 1px 2px rgba(16, 24, 40, 0.02);
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  box-shadow: var(--shadow-sm);
+  transition: background-color 0.15s ease, border-color 0.15s ease;
 }
 
 .gov-card-interactive {
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
 }
 
 .gov-card-interactive:hover {
-  border-color: #CBD5E1;
-  box-shadow: 0 4px 6px -2px rgba(16, 24, 40, 0.05), 0 2px 4px -2px rgba(16, 24, 40, 0.03);
+  border-color: var(--border-color-strong);
 }
 
-/* Leaflet Container - Clean Light Institutional Map */
+/* Leaflet Container Overrides */
 .leaflet-container {
   width: 100%;
   height: 100%;
-  border-radius: 8px;
-  background: #F8FAFC !important;
-  font-family: 'Inter', sans-serif;
+  border-radius: 6px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 .leaflet-popup-content-wrapper {
-  background: #FFFFFF !important;
-  color: #172033 !important;
-  border: 1px solid #D9E1EA;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  border-radius: 8px;
+  background: var(--bg-surface) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 6px;
   padding: 2px;
 }
 
 .leaflet-popup-tip {
-  background: #FFFFFF !important;
+  background: var(--bg-surface) !important;
 }
 
-/* Clean Form Controls */
-input, select {
-  font-family: 'Inter', sans-serif;
-}
-
-/* Clean Custom Scrollbar */
+/* High-Precision Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #F1F5F9;
+  background: var(--bg-app);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #CBD5E1;
+  background: var(--border-color);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94A3B8;
+  background: var(--text-muted);
+}
+
+/* Institutional Print Stylesheet */
+@media print {
+  aside,
+  header button,
+  button,
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    background-color: #FFFFFF !important;
+    color: #000000 !important;
+    font-size: 10pt;
+  }
+
+  .gov-card {
+    border: 1px solid #CBD5E1 !important;
+    box-shadow: none !important;
+    break-inside: avoid;
+  }
+
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+  }
 }

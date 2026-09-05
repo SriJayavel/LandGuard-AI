@@ -1,16 +1,26 @@
-# React + Vite
+# LandGuard AI — Frontend Client
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Enterprise Decision-Support and Land Acquisition Risk Intelligence client interface built with React, Vite, Tailwind CSS, Recharts, and Leaflet.
 
-Currently, two official plugins are available:
+## Features
+- **Executive Dashboard:** Macro-level portfolio KPIs, critical alerts queue, and corridor breakdown.
+- **Acquisition Portfolio Registry:** Filterable, sortable statutory case table with CSV export.
+- **GIS Spatial Risk Map:** Interactive Leaflet map with district risk indicators.
+- **Explainable Case Dossier:** Modal view with TreeSHAP factor attributions and stage progression.
+- **Dual Theme Support:** Calibrated enterprise Light theme and high-contrast institutional Dark mode.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Development
 
-## React Compiler
+```bash
+npm install
+npm run dev
+```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Server runs on `http://localhost:3000` with proxy to Flask backend on `http://127.0.0.1:5000`.
 
-## Expanding the Oxlint configuration
+## Production Build
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+```bash
+npm run build
+```
+Generates optimized static bundle in `dist/`.
