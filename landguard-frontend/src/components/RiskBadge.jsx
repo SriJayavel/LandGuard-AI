@@ -1,41 +1,31 @@
 import React from 'react';
+import { AlertOctagon, AlertTriangle, CheckCircle2 } from 'lucide-react';
 
-export default function RiskBadge({ level, score }) {
-  const getBadgeClass = (lvl) => {
-    switch (lvl) {
-      case 'High':
-        return 'badge-high';
-      case 'Medium':
-        return 'badge-medium';
-      case 'Low':
-        return 'badge-low';
-      default:
-        return 'badge-low';
-    }
-  };
+export default function RiskBadge({ level }) {
+  const normLevel = (level || 'Low').toString().trim();
+
+  if (normLevel === 'High') {
+    return (
+      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-bold bg-red-950/80 text-red-400 border border-red-800/80 shadow-sm">
+        <AlertOctagon className="w-3.5 h-3.5 text-red-400" />
+        <span>HIGH RISK</span>
+      </span>
+    );
+  }
+
+  if (normLevel === 'Medium') {
+    return (
+      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-bold bg-amber-950/80 text-amber-400 border border-amber-800/80 shadow-sm">
+        <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
+        <span>MEDIUM RISK</span>
+      </span>
+    );
+  }
 
   return (
-    <span
-      className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${getBadgeClass(level)}`}
-      style={{
-        padding: '3px 10px',
-        borderRadius: '20px',
-        fontSize: '0.75rem',
-        fontWeight: 600,
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: '6px'
-      }}
-    >
-      <span
-        style={{
-          width: '6px',
-          height: '6px',
-          borderRadius: '50%',
-          backgroundColor: level === 'High' ? '#ef4444' : level === 'Medium' ? '#f59e0b' : '#10b981'
-        }}
-      />
-      {level} {score !== undefined && `(${Math.round(score * 100)}%)`}
+    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-950/80 text-emerald-400 border border-emerald-800/80 shadow-sm">
+      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+      <span>LOW RISK</span>
     </span>
   );
 }

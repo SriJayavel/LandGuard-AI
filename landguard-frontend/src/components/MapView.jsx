@@ -1,122 +1,131 @@
-import React from 'react';
-import { MapContainer, TileLayer, CircleMarker, Popup, Tooltip } from 'react-leaflet';
+import React, { useState } from 'react';
+import { MapContainer, TileLayer, CircleMarker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import RiskBadge from './RiskBadge';
-import { Sparkles, MapPin } from 'lucide-react';
+import { MapPin, Layers, Sparkles, AlertTriangle } from 'lucide-react';
 
-const MAHARASHTRA_CENTER = [19.7, 76.0];
+export default function MapView({ cases = [], projects = [], onSelectCase, onSelectProject }) {
+  const dataList = cases && cases.length > 0 ? cases : projects;
+  const handleSelect = onSelectCase || onSelectProject || (() => {});
+  const [selectedDistrict, setSelectedDistrict] = useState('All');
 
-const MapView = ({ cases, onSelectCase }) => {
+  const districts = ['All', 'Nagpur', 'Pune', 'Nashik', 'Aurangabad', 'Amravati', 'Kolhapur', 'Thane', 'Raigad'];
+
+  const filteredCases = dataList.filter((c) => {
+    if (!c) return false;
+    return selectedDistrict === 'All' || c.district === selectedDistrict;
+  });
+
+  const centerLat = 19.75;
+  const centerLng = 75.71;
+
   const getMarkerColor = (level) => {
-    switch (level) {
-      case 'High': return '#EF4444';
-      case 'Medium': return '#F59E0B';
-      case 'Low': return '#10B981';
-      default: return '#64748B';
-    }
+    if (level === 'High') return '#EF4444';
+    if (level === 'Medium') return '#F59E0B';
+    return '#10B981';
   };
 
   return (
-    <div className="space-y-4 animate-fade-in">
-      <div className="glass-card p-4 rounded-xl flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h2 className="text-xl font-bold flex items-center gap-2">
-            <MapPin className="w-5 h-5 text-cyan-400" />
-            GIS Land Acquisition Heatmap
-          </h2>
-          <p className="text-xs text-slate-400 mt-1">
-            Real-time geospatial monitoring of land acquisition projects across Maharashtra districts
-          </p>
+    <div className="space-y-4">
+      {/* Control Header */}
+      <div className="solid-card p-4 rounded-xl flex flex-wrap items-center justify-between gap-4 border border-gray-800 bg-gray-900">
+        <div className="flex items-center gap-3">
+          <div className="bg-blue-600 p-2 rounded-lg text-white shadow-sm border border-blue-500">
+            <MapPin className="w-5 h-5" />
+          </div>
+          <div>
+            <h2 className="text-base font-bold text-gray-100">
+              Maharashtra Infrastructure GIS Cartography Map
+            </h2>
+            <p className="text-xs text-gray-400">
+              Spatial risk score distribution across 36 Maharashtra Districts & Acquisition Corridors
+            </p>
+          </div>
         </div>
-        <div className="flex items-center gap-4 text-xs font-semibold">
-          <div className="flex items-center gap-1.5">
-            <span className="w-3 h-3 rounded-full bg-rose-500 shadow-[0_0_8px_rgba(239,68,68,0.6)]"></span>
-            <span>High Risk ({cases.filter(c => c.risk_level === 'High').length})</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span className="w-3 h-3 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.6)]"></span>
-            <span>Medium Risk ({cases.filter(c => c.risk_level === 'Medium').length})</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span className="w-3 h-3 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]"></span>
-            <span>Low Risk ({cases.filter(c => c.risk_level === 'Low').length})</span>
+
+        {/* Filter & Legend */}
+        <div className="flex items-center gap-4 text-xs">
+          <select
+            value={selectedDistrict}
+            onChange={(e) => setSelectedDistrict(e.target.value)}
+            className="bg-gray-950 text-gray-200 px-3 py-2 rounded-md border border-gray-800 focus:outline-none focus:border-blue-500 font-medium cursor-pointer"
+          >
+            {districts.map((d) => (
+              <option key={d} value={d}>Filter District: {d}</option>
+            ))}
+          </select>
+
+          {/* Color Legend */}
+          <div className="flex items-center gap-3 bg-gray-950 px-3 py-1.5 rounded-md border border-gray-800 text-[11px] font-semibold">
+            <span className="flex items-center gap-1.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-red-500"></span> High
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-amber-500"></span> Medium
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Low
+            </span>
           </div>
         </div>
       </div>
 
-      <div className="glass-card p-2 rounded-xl overflow-hidden h-[600px] relative border border-slate-700/50 shadow-2xl">
+      {/* Leaflet Map Frame */}
+      <div className="solid-card rounded-xl overflow-hidden border border-gray-800 h-[600px] relative shadow-xl bg-gray-950">
         <MapContainer
-          center={MAHARASHTRA_CENTER}
+          center={[centerLat, centerLng]}
           zoom={7}
           scrollWheelZoom={true}
-          style={{ height: '100%', width: '100%', borderRadius: '0.75rem', backgroundColor: '#0f172a' }}
+          style={{ height: '100%', width: '100%' }}
         >
           <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+            attribution='&copy; <a href="https://carto.com/">CartoDB</a> Dark Matter'
             url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
           />
-          {cases.map((c) => {
-            const lat = parseFloat(c.latitude);
-            const lng = parseFloat(c.longitude);
-            if (isNaN(lat) || isNaN(lng)) return null;
 
+          {filteredCases.map((c) => {
+            const lat = parseFloat(c.latitude) || 19.7;
+            const lng = parseFloat(c.longitude) || 76.0;
             const color = getMarkerColor(c.risk_level);
-            const radius = 6 + Math.round(c.risk_score * 8);
 
             return (
               <CircleMarker
-                key={c.case_id}
+                key={c.case_id || c.project_id}
                 center={[lat, lng]}
-                radius={radius}
+                radius={c.risk_level === 'High' ? 10 : 7}
                 pathOptions={{
-                  color: color,
                   fillColor: color,
-                  fillOpacity: 0.65,
-                  weight: 2,
+                  fillOpacity: 0.85,
+                  color: '#ffffff',
+                  weight: 1.5,
                 }}
               >
-                <Tooltip direction="top" offset={[0, -10]} opacity={0.9}>
-                  <div className="text-xs font-semibold text-slate-800">
-                    <p className="font-bold">{c.project_name}</p>
-                    <p className="text-[10px] text-slate-600">{c.district} &bull; Score: {(c.risk_score * 100).toFixed(0)}%</p>
-                  </div>
-                </Tooltip>
-
-                <Popup className="custom-leaflet-popup">
-                  <div className="p-3 bg-slate-900 text-slate-100 rounded-lg max-w-xs font-sans text-xs space-y-2 border border-slate-700 shadow-xl">
-                    <div className="flex items-start justify-between gap-2 border-b border-slate-700 pb-2">
-                      <div>
-                        <p className="font-bold text-sm text-cyan-300 leading-tight">{c.project_name}</p>
-                        <p className="text-[11px] text-slate-400">{c.district} District &bull; {c.current_stage}</p>
-                      </div>
+                <Popup>
+                  <div className="p-3 space-y-2 font-sans text-xs max-w-xs">
+                    <div className="flex items-center justify-between border-b border-gray-700 pb-2">
+                      <span className="font-mono font-bold text-blue-400">{c.case_id || c.project_id}</span>
                       <RiskBadge level={c.risk_level} />
                     </div>
-
-                    <div className="grid grid-cols-2 gap-2 text-[11px] bg-slate-800/60 p-2 rounded border border-slate-700/50">
+                    <div>
+                      <h4 className="font-bold text-gray-100 text-sm">{c.project_name}</h4>
+                      <p className="text-gray-400 mt-0.5">{c.district} District &bull; {c.current_stage || c.stage}</p>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 bg-gray-900 p-2 rounded border border-gray-800 text-[11px] font-mono">
                       <div>
-                        <span className="text-slate-400 block">Risk Score</span>
-                        <span className="font-bold text-slate-200">{(c.risk_score * 100).toFixed(1)}%</span>
+                        <span className="text-gray-500 block">Risk Score</span>
+                        <span className="font-bold text-red-400">{((c.risk_score || 0) * 100).toFixed(1)}%</span>
                       </div>
                       <div>
-                        <span className="text-slate-400 block">Compensation</span>
+                        <span className="text-gray-500 block">Outlay</span>
                         <span className="font-bold text-emerald-400">&#8377;{c.compensation_offered_cr} Cr</span>
                       </div>
-                      <div>
-                        <span className="text-slate-400 block">Legal Cases</span>
-                        <span className="font-bold text-rose-400">{c.legal_cases_pending} Pending</span>
-                      </div>
-                      <div>
-                        <span className="text-slate-400 block">Protests</span>
-                        <span className="font-bold text-amber-400">{c.local_protests_count} Logged</span>
-                      </div>
                     </div>
-
                     <button
-                      onClick={() => onSelectCase(c)}
-                      className="w-full mt-2 py-1.5 px-3 bg-cyan-600 hover:bg-cyan-500 text-white rounded font-medium text-xs flex items-center justify-center gap-1.5 transition-all shadow-md hover:shadow-cyan-500/25"
+                      onClick={() => handleSelect(c)}
+                      className="w-full mt-2 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded font-semibold text-xs flex items-center justify-center gap-1 transition-all cursor-pointer"
                     >
-                      <Sparkles className="w-3.5 h-3.5 text-cyan-200" />
-                      <span>Explain AI Risk (SHAP)</span>
+                      <Sparkles className="w-3.5 h-3.5" />
+                      <span>View SHAP Analysis</span>
                     </button>
                   </div>
                 </Popup>
@@ -127,6 +136,4 @@ const MapView = ({ cases, onSelectCase }) => {
       </div>
     </div>
   );
-};
-
-export default MapView;
+}

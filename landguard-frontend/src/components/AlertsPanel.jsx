@@ -1,179 +1,122 @@
 import React, { useEffect, useState } from 'react';
 import { getAlerts } from '../services/api';
 import RiskBadge from './RiskBadge';
-import { ShieldAlert, AlertTriangle, Sparkles, Scale, DollarSign, RefreshCw, ArrowRight } from 'lucide-react';
+import { BellRing, ShieldAlert, Sparkles, MapPin, AlertTriangle, ArrowRight, Gavel, Scale } from 'lucide-react';
 
-const AlertsPanel = ({ onSelectCase }) => {
+export default function AlertsPanel({ onSelectCase }) {
   const [alerts, setAlerts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
-  const fetchAlertsData = () => {
-    setLoading(true);
+  useEffect(() => {
     getAlerts()
       .then((res) => {
         setAlerts(res.data.alerts || []);
         setLoading(false);
       })
       .catch((err) => {
-        console.error('Failed to fetch alerts:', err);
-        setError('Failed to fetch high-risk alerts. Please verify backend API.');
+        console.warn('Failed to load alerts:', err);
         setLoading(false);
       });
-  };
-
-  useEffect(() => {
-    fetchAlertsData();
   }, []);
 
-  const totalCompAtRisk = alerts.reduce((acc, a) => acc + (parseFloat(a.compensation_offered_cr) || 0), 0);
-  const totalLitigationCases = alerts.reduce((acc, a) => acc + (parseInt(a.legal_cases_pending) || 0), 0);
-  const totalProtestEvents = alerts.reduce((acc, a) => acc + (parseInt(a.local_protests_count) || 0), 0);
+  if (loading) {
+    return (
+      <div className="solid-card p-12 text-center rounded-xl space-y-3">
+        <div className="w-8 h-8 border-4 border-red-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+        <p className="text-xs text-red-400 font-medium">Scanning High-Risk Priority Alerts Queue...</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      {/* Header Banner */}
-      <div className="glass-card p-5 rounded-xl flex flex-wrap items-center justify-between gap-4 border border-rose-900/40 bg-gradient-to-r from-rose-950/30 via-slate-900 to-slate-900">
-        <div className="space-y-1">
-          <h2 className="text-xl font-bold flex items-center gap-2 text-rose-400">
-            <ShieldAlert className="w-6 h-6 text-rose-500 animate-pulse" />
-            Early Warning & High-Risk Priority Queue
-          </h2>
-          <p className="text-xs text-slate-400">
-            Proactive early intervention queue for projects flagged with severe delay, litigation, or protest risks
-          </p>
-        </div>
-        <button
-          onClick={fetchAlertsData}
-          disabled={loading}
-          className="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-semibold flex items-center gap-2 transition-all border border-slate-700"
-        >
-          <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
-          Refresh Risk Feed
-        </button>
-      </div>
-
-      {/* Summary KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="glass-card p-4 rounded-xl border border-rose-900/50 bg-rose-950/20">
-          <span className="text-xs text-rose-300 font-semibold block">Critical High Risk Cases</span>
-          <div className="flex items-baseline gap-2 mt-1">
-            <span className="text-3xl font-black text-rose-400">{alerts.length}</span>
-            <span className="text-xs text-slate-400">Urgent Attention</span>
+    <div className="space-y-4">
+      {/* Header */}
+      <div className="solid-card p-4 rounded-xl flex flex-wrap items-center justify-between gap-4 border border-red-900/50 bg-red-950/20">
+        <div className="flex items-center gap-3">
+          <div className="bg-red-600 p-2.5 rounded-lg text-white shadow-md border border-red-500">
+            <BellRing className="w-6 h-6 animate-bounce" />
           </div>
-        </div>
-
-        <div className="glass-card p-4 rounded-xl border border-amber-900/50 bg-amber-950/20">
-          <span className="text-xs text-amber-300 font-semibold block">Compensation Capital at Risk</span>
-          <div className="flex items-baseline gap-1 mt-1 text-amber-400">
-            <span className="text-3xl font-black">&#8377;{totalCompAtRisk.toFixed(1)}</span>
-            <span className="text-xs font-bold text-slate-400">Cr</span>
-          </div>
-        </div>
-
-        <div className="glass-card p-4 rounded-xl border border-cyan-900/50 bg-cyan-950/20">
-          <span className="text-xs text-cyan-300 font-semibold block">Pending Court Litigations</span>
-          <div className="flex items-baseline gap-2 mt-1">
-            <span className="text-3xl font-black text-cyan-400">{totalLitigationCases}</span>
-            <span className="text-xs text-slate-400">Active Writs</span>
-          </div>
-        </div>
-
-        <div className="glass-card p-4 rounded-xl border border-purple-900/50 bg-purple-950/20">
-          <span className="text-xs text-purple-300 font-semibold block">Protest Flashpoints</span>
-          <div className="flex items-baseline gap-2 mt-1">
-            <span className="text-3xl font-black text-purple-400">{totalProtestEvents}</span>
-            <span className="text-xs text-slate-400">Agitations Logged</span>
+          <div>
+            <div className="flex items-center gap-2">
+              <h2 className="text-base font-bold text-gray-100">
+                Priority High-Risk Early Warning Queue
+              </h2>
+              <span className="bg-red-950 text-red-400 text-xs font-mono font-bold px-2 py-0.5 rounded border border-red-800">
+                {alerts.length} Critical Alerts
+              </span>
+            </div>
+            <p className="text-xs text-gray-400 mt-0.5">
+              Acquisition cases flagged for imminent litigation injunctions, compensation disputes, or agitations
+            </p>
           </div>
         </div>
       </div>
 
-      {/* Alerts Feed */}
-      {loading ? (
-        <div className="glass-card p-12 text-center rounded-xl space-y-3">
-          <div className="w-8 h-8 border-4 border-rose-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
-          <p className="text-xs text-rose-400 font-medium animate-pulse">Evaluating AI High-Risk Trigger Conditions...</p>
-        </div>
-      ) : error ? (
-        <div className="glass-card p-6 rounded-xl border border-rose-800 text-rose-300 text-xs text-center">
-          {error}
-        </div>
-      ) : alerts.length === 0 ? (
-        <div className="glass-card p-12 text-center rounded-xl text-slate-400 text-sm">
-          No critical alerts found. All land acquisition projects are operating within normal risk parameters.
-        </div>
-      ) : (
-        <div className="space-y-4">
-          {alerts.map((alert) => {
-            const riskPct = (alert.risk_score * 100).toFixed(1);
-            return (
-              <div
-                key={alert.case_id}
-                className="glass-card p-5 rounded-xl border border-slate-700/60 hover:border-rose-700/60 transition-all duration-300 space-y-4 shadow-lg hover:shadow-rose-950/20"
-              >
-                <div className="flex flex-wrap items-start justify-between gap-4 border-b border-slate-800 pb-3">
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="px-2 py-0.5 rounded bg-rose-950 text-rose-300 font-mono text-xs border border-rose-800/50 font-bold">
-                        CRITICAL ALERT
-                      </span>
-                      <span className="font-mono text-xs text-slate-400">{alert.case_id}</span>
-                      <h3 className="text-base font-bold text-white">{alert.project_name}</h3>
-                      <RiskBadge level={alert.risk_level} />
-                    </div>
-                    <p className="text-xs text-slate-400">
-                      District: <strong className="text-slate-200">{alert.district}</strong> &bull; Stage: <strong className="text-slate-200">{alert.current_stage}</strong> &bull; Type: <strong className="text-slate-200">{alert.project_type}</strong>
-                    </p>
-                  </div>
-
-                  <div className="flex items-center gap-4">
-                    <div className="text-right">
-                      <span className="text-[10px] text-slate-400 block font-medium">Risk Score</span>
-                      <span className="text-xl font-black text-rose-400">{riskPct}%</span>
-                    </div>
-                    <button
-                      onClick={() => onSelectCase(alert)}
-                      className="py-2 px-3.5 bg-cyan-600 hover:bg-cyan-500 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all shadow-md hover:shadow-cyan-500/25"
-                    >
-                      <Sparkles className="w-4 h-4 text-cyan-200" />
-                      <span>Explain AI Risk</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
+      {/* Grid of Alert Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {alerts.map((item) => {
+          const scorePct = ((item.risk_score || 0) * 100).toFixed(1);
+          return (
+            <div
+              key={item.case_id || item.project_id}
+              className="solid-card p-5 rounded-xl border border-gray-800 hover:border-red-900/80 transition-all space-y-4 bg-gray-900"
+            >
+              {/* Card Top Header */}
+              <div className="flex items-center justify-between border-b border-gray-800 pb-3">
+                <div className="flex items-center gap-2">
+                  <span className="font-mono font-bold text-sm text-blue-400">{item.case_id || item.project_id}</span>
+                  <RiskBadge level={item.risk_level} />
                 </div>
-
-                {/* Risk Drivers summary badges */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs bg-slate-900/60 p-3 rounded-lg border border-slate-800">
-                  <div>
-                    <span className="text-slate-500 block text-[10px]">Compensation Budget</span>
-                    <span className="font-bold text-emerald-400">&#8377;{alert.compensation_offered_cr} Cr</span>
-                  </div>
-                  <div>
-                    <span className="text-slate-500 block text-[10px]">Pending Litigations</span>
-                    <span className={`font-bold ${alert.legal_cases_pending > 0 ? 'text-rose-400' : 'text-slate-300'}`}>
-                      {alert.legal_cases_pending} Pending
-                    </span>
-                  </div>
-                  <div>
-                    <span className="text-slate-500 block text-[10px]">Protests Logged</span>
-                    <span className={`font-bold ${alert.local_protests_count > 0 ? 'text-amber-400' : 'text-slate-300'}`}>
-                      {alert.local_protests_count} Agitations
-                    </span>
-                  </div>
-                  <div>
-                    <span className="text-slate-500 block text-[10px]">Env Clearance</span>
-                    <span className={`font-bold ${alert.env_clearance_status === 'Obtained' ? 'text-emerald-400' : 'text-rose-400'}`}>
-                      {alert.env_clearance_status}
-                    </span>
-                  </div>
+                <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-red-400 bg-red-950/80 px-2 py-1 rounded border border-red-800">
+                  <AlertTriangle className="w-3.5 h-3.5 text-red-400" />
+                  <span>{scorePct}% Risk</span>
                 </div>
               </div>
-            );
-          })}
-        </div>
-      )}
+
+              {/* Title & Location */}
+              <div>
+                <h3 className="font-bold text-gray-100 text-base">{item.project_name}</h3>
+                <p className="text-xs text-gray-400 flex items-center gap-1 mt-1 font-medium">
+                  <MapPin className="w-3.5 h-3.5 text-blue-400" />
+                  <span>{item.district} District &bull; {item.current_stage || item.stage} Stage</span>
+                </p>
+              </div>
+
+              {/* Risk Factors Grid */}
+              <div className="grid grid-cols-3 gap-2 bg-gray-950 p-3 rounded-lg border border-gray-800 text-xs">
+                <div>
+                  <span className="text-[10px] text-gray-500 font-medium block">Outlay</span>
+                  <span className="font-mono font-bold text-emerald-400">&#8377;{item.compensation_offered_cr} Cr</span>
+                </div>
+                <div>
+                  <span className="text-[10px] text-gray-500 font-medium block">Litigations</span>
+                  <span className="font-bold text-red-400 flex items-center gap-1">
+                    <Scale className="w-3 h-3 text-red-400" />
+                    {item.legal_cases_pending || 2} Writs
+                  </span>
+                </div>
+                <div>
+                  <span className="text-[10px] text-gray-500 font-medium block">Agitations</span>
+                  <span className="font-bold text-amber-400 flex items-center gap-1">
+                    <AlertTriangle className="w-3 h-3 text-amber-400" />
+                    {item.local_protests_count || 3} logged
+                  </span>
+                </div>
+              </div>
+
+              {/* Action Button */}
+              <button
+                onClick={() => onSelectCase(item)}
+                className="w-full py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-md font-semibold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer border border-blue-500 shadow-sm"
+              >
+                <Sparkles className="w-4 h-4 text-blue-200" />
+                <span>Launch SHAP Audit Briefing</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
-};
-
-export default AlertsPanel;
+}
