@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { MapContainer, TileLayer, CircleMarker, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import RiskBadge from './RiskBadge';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Compass } from 'lucide-react';
 
 function MapRecenter({ center, zoom }) {
   const map = useMap();
