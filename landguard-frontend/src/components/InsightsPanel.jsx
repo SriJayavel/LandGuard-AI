@@ -105,7 +105,7 @@ export default function InsightsPanel() {
       {/* Main Grid: Chart + District Ranking */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Stage Delay Bar Chart */}
-        <div className="gov-card p-4 space-y-3 bg-white dark:bg-[#111A24]">
+        <div className="gov-card p-4 space-y-3 bg-white dark:bg-[#111A24] flex flex-col justify-between">
           <div className="border-b border-[#E2E8F0] dark:border-[#263342] pb-2">
             <h2 className="text-xs font-bold uppercase tracking-wider text-[#0F2942] dark:text-[#F3F6FA]">
               Critical Delay Cases by Milestone
@@ -115,26 +115,41 @@ export default function InsightsPanel() {
             </p>
           </div>
 
-          <div className="w-full h-60">
-            <ResponsiveContainer width="100%" height={230}>
+          <div className="w-full flex-1 min-h-[290px] pt-1">
+            <ResponsiveContainer width="100%" height={290}>
               <BarChart
                 data={stageData}
                 layout="vertical"
-                margin={{ top: 10, right: 30, left: 110, bottom: 5 }}
+                margin={{ top: 8, right: 24, left: 8, bottom: 8 }}
               >
-                <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" opacity={0.4} />
-                <XAxis type="number" stroke="#64748B" fontSize={11} />
-                <YAxis type="category" dataKey="stage" stroke="#64748B" fontSize={11} width={125} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" opacity={0.3} horizontal={false} />
+                <XAxis
+                  type="number"
+                  stroke="#64748B"
+                  fontSize={11}
+                  domain={[0, 55]}
+                  tickLine={false}
+                  axisLine={{ stroke: '#E2E8F0', opacity: 0.3 }}
+                />
+                <YAxis
+                  type="category"
+                  dataKey="stage"
+                  stroke="#64748B"
+                  fontSize={11}
+                  width={145}
+                  tickLine={false}
+                  axisLine={{ stroke: '#E2E8F0', opacity: 0.3 }}
+                />
                 <Tooltip
                   content={({ active, payload }) => {
                     if (active && payload && payload.length) {
                       const d = payload[0].payload;
                       return (
-                        <div className="bg-white dark:bg-[#151F2B] p-2 rounded shadow border border-[#E2E8F0] dark:border-[#263342] text-xs space-y-1">
+                        <div className="bg-white dark:bg-[#151F2B] p-2.5 rounded shadow border border-[#E2E8F0] dark:border-[#263342] text-xs space-y-1">
                           <span className="font-bold text-[#0F2942] dark:text-[#F3F6FA] block">{d.stage}</span>
                           <div className="text-[#64748B] dark:text-[#9AA8B8] flex justify-between gap-3">
                             <span>Critical Stalls:</span>
-                            <strong className="text-[#DC2626] font-mono-num">{d.high_risk_count}</strong>
+                            <strong className="text-[#DC2626] font-mono-num font-bold">{d.high_risk_count} cases</strong>
                           </div>
                         </div>
                       );
@@ -142,7 +157,11 @@ export default function InsightsPanel() {
                     return null;
                   }}
                 />
-                <Bar dataKey="high_risk_count" radius={[0, 3, 3, 0]}>
+                <Bar
+                  dataKey="high_risk_count"
+                  barSize={28}
+                  radius={[0, 4, 4, 0]}
+                >
                   {stageData.map((entry, index) => (
                     <Cell
                       key={`cell-${index}`}
