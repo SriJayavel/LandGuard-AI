@@ -10,7 +10,7 @@ const api = axios.create({
 
 // Fallback synthetic dataset in case of local network timeout
 const generateFallbackCases = () => {
-  const districts = ['Nagpur', 'Pune', 'Nashik', 'Aurangabad', 'Amravati', 'Kolhapur', 'Thane', 'Raigad'];
+  const districts = ['Nagpur', 'Pune', 'Nashik', 'Aurangabad', 'Amravati', 'Kolhapur'];
   const stages = ['Section 11 Notification', 'SIA Clearance', 'Section 19 Declaration', 'Award Inquiry', 'Compensation Payment', 'Land Possession'];
   const types = ['Highway Expansion', 'Industrial Corridor', 'Railway Freight Corridor', 'Metro Rail Line', 'Irrigation Dam'];
 

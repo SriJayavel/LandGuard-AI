@@ -19,16 +19,14 @@ export default function MapView({ cases = [], onSelectCase, theme = 'light' }) {
   const districtCoords = {
     All: { center: [19.75, 75.71], zoom: 7 },
     Pune: { center: [18.5204, 73.8567], zoom: 10 },
-    Thane: { center: [19.2183, 72.9781], zoom: 10 },
     Nagpur: { center: [21.1458, 79.0882], zoom: 10 },
     Nashik: { center: [19.9975, 73.7898], zoom: 10 },
     Amravati: { center: [20.9374, 77.7796], zoom: 10 },
     Aurangabad: { center: [19.8762, 75.3433], zoom: 10 },
-    Raigad: { center: [18.5158, 73.1000], zoom: 10 },
     Kolhapur: { center: [16.7050, 74.2433], zoom: 10 },
   };
 
-  const districts = ['All', 'Amravati', 'Aurangabad', 'Kolhapur', 'Nagpur', 'Nashik', 'Pune', 'Raigad', 'Thane'];
+  const districts = ['All', 'Amravati', 'Aurangabad', 'Kolhapur', 'Nagpur', 'Nashik', 'Pune'];
 
   const filteredCases = useMemo(() => {
     return cases.filter((c) => {

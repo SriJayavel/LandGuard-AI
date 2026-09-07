@@ -61,7 +61,8 @@ export default function OverviewView({
     { district: 'Pune', critical: 31, total: 85, leadIssue: 'Judicial writ stays' },
     { district: 'Nashik', critical: 28, total: 70, leadIssue: 'Forest land diversion delays' },
     { district: 'Nagpur', critical: 24, total: 72, leadIssue: 'R&R township site objections' },
-    { district: 'Thane', critical: 22, total: 77, leadIssue: 'Industrial corridor compensation' },
+    { district: 'Aurangabad', critical: 22, total: 78, leadIssue: 'Industrial corridor compensation' },
+    { district: 'Kolhapur', critical: 18, total: 68, leadIssue: 'Agricultural title reconciliation' },
   ];
 
   return (

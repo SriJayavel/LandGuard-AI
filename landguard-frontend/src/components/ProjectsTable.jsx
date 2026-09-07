@@ -17,7 +17,7 @@ export default function ProjectsTable({ cases = [], onSelectCase, loading }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(15);
 
-  const districts = ['All', 'Amravati', 'Aurangabad', 'Kolhapur', 'Nagpur', 'Nashik', 'Pune', 'Raigad', 'Thane'];
+  const districts = ['All', 'Amravati', 'Aurangabad', 'Kolhapur', 'Nagpur', 'Nashik', 'Pune'];
   const stages = [
     'All',
     'Section 11 Notification',

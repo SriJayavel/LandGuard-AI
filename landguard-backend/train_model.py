@@ -8,11 +8,13 @@ from sklearn.preprocessing import LabelEncoder
 import xgboost as xgb
 import shap
 
-def train():
-    data_path = "land_cases.csv"
-    if not os.path.exists(data_path):
+def train(regenerate=True):
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    data_path = os.path.join(base_dir, "land_cases.csv")
+    
+    if regenerate or not os.path.exists(data_path):
         from generate_data import generate_land_data
-        generate_land_data(data_path)
+        generate_land_data(data_path, N=600)
 
     df = pd.read_csv(data_path)
     
@@ -48,12 +50,12 @@ def train():
     
     explainer = shap.TreeExplainer(model)
     
-    joblib.dump(model, 'model.joblib')
-    joblib.dump(encoders, 'encoders.joblib')
-    joblib.dump(explainer, 'explainer.joblib')
-    joblib.dump(features, 'features.joblib')
+    joblib.dump(model, os.path.join(base_dir, 'model.joblib'))
+    joblib.dump(encoders, os.path.join(base_dir, 'encoders.joblib'))
+    joblib.dump(explainer, os.path.join(base_dir, 'explainer.joblib'))
+    joblib.dump(features, os.path.join(base_dir, 'features.joblib'))
     
     print("Saved model artifacts: model.joblib, encoders.joblib, explainer.joblib, features.joblib")
 
 if __name__ == "__main__":
-    train()
+    train(regenerate=True)
