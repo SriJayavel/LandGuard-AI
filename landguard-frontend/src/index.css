@@ -145,19 +145,45 @@ body {
   height: 100%;
   border-radius: 6px;
   font-family: 'Plus Jakarta Sans', sans-serif;
+  z-index: 10;
 }
 
 .leaflet-popup-content-wrapper {
   background: var(--bg-surface) !important;
   color: var(--text-primary) !important;
   border: 1px solid var(--border-color);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
   border-radius: 6px;
-  padding: 2px;
+  padding: 0px;
+}
+
+.leaflet-popup-content {
+  margin: 0px !important;
+  line-height: inherit;
 }
 
 .leaflet-popup-tip {
   background: var(--bg-surface) !important;
+  border: 1px solid var(--border-color);
+  box-shadow: none;
+}
+
+.dark .leaflet-popup-content-wrapper {
+  background: #111A24 !important;
+  color: #F3F6FA !important;
+  border: 1px solid #263342 !important;
+}
+
+.dark .leaflet-popup-tip {
+  background: #111A24 !important;
+}
+
+.dark .leaflet-popup-close-button {
+  color: #9AA8B8 !important;
+}
+
+.dark .leaflet-popup-close-button:hover {
+  color: #F3F6FA !important;
 }
 
 /* High-Precision Custom Scrollbar */

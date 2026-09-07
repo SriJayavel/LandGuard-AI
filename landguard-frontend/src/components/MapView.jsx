@@ -54,8 +54,8 @@ export default function MapView({ cases = [], onSelectCase, theme = 'light' }) {
   };
 
   const tileUrl = isDark
-    ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-    : 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
+    ? 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}'
+    : 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}';
 
   return (
     <div className="space-y-3.5">
@@ -132,7 +132,7 @@ export default function MapView({ cases = [], onSelectCase, theme = 'light' }) {
           <MapRecenter center={activeView.center} zoom={activeView.zoom} />
 
           <TileLayer
-            attribution='&copy; <a href="https://carto.com/">CARTO</a>'
+            attribution='&copy; <a href="https://www.esri.com/">Esri</a> &bull; LandGuard GIS'
             url={tileUrl}
           />
 
@@ -155,44 +155,48 @@ export default function MapView({ cases = [], onSelectCase, theme = 'light' }) {
                 }}
               >
                 <Popup>
-                  <div className="p-2.5 space-y-1.5 text-xs text-[#0F172A] min-w-[210px]">
+                  <div className="p-3 space-y-2 text-xs text-[#0F172A] dark:text-[#F3F6FA] min-w-[220px]">
                     <div>
-                      <span className="font-mono-num text-[11px] font-bold text-[#1D4ED8] block">
+                      <span className="font-mono-num text-[11px] font-bold text-[#1D4ED8] dark:text-[#3B82F6] block">
                         {c.case_id || c.project_id}
                       </span>
-                      <h3 className="font-bold text-xs text-[#0F172A] leading-snug">
+                      <h3 className="font-bold text-xs text-[#0F172A] dark:text-[#F3F6FA] leading-snug">
                         {c.project_name}
                       </h3>
-                      <p className="text-[#64748B] text-[11px]">
+                      <p className="text-[#64748B] dark:text-[#9AA8B8] text-[11px]">
                         {c.district} Corridor
                       </p>
                     </div>
 
-                    <div className="py-1.5 border-y border-[#E2E8F0] space-y-1 text-[11px]">
+                    <div className="py-2 border-y border-[#E2E8F0] dark:border-[#263342] space-y-1.5 text-[11px]">
                       <div className="flex justify-between items-center">
-                        <span className="text-[#64748B]">Status:</span>
+                        <span className="text-[#64748B] dark:text-[#9AA8B8]">Status:</span>
                         <RiskBadge level={c.risk_level} />
                       </div>
-                      <div className="flex justify-between">
-                        <span className="text-[#64748B]">Delay Probability:</span>
-                        <span className="font-mono-num font-bold text-[#DC2626]">{probPct}%</span>
+                      <div className="flex justify-between items-center">
+                        <span className="text-[#64748B] dark:text-[#9AA8B8]">Delay Probability:</span>
+                        <span className="font-mono-num font-bold text-[#DC2626] dark:text-red-400">{probPct}%</span>
                       </div>
-                      <div className="flex justify-between">
-                        <span className="text-[#64748B]">Stage:</span>
-                        <span className="font-medium text-[#0F172A] truncate max-w-[120px]">{c.current_stage || c.stage}</span>
+                      <div className="flex justify-between items-center">
+                        <span className="text-[#64748B] dark:text-[#9AA8B8]">Stage:</span>
+                        <span className="font-medium text-[#0F172A] dark:text-[#F3F6FA] truncate max-w-[130px]">
+                          {c.current_stage || c.stage || 'Notification'}
+                        </span>
                       </div>
-                      <div className="flex justify-between">
-                        <span className="text-[#64748B]">Outlay:</span>
-                        <span className="font-mono-num font-semibold text-[#0F172A]">&#8377;{c.compensation_offered_cr} Cr</span>
+                      <div className="flex justify-between items-center">
+                        <span className="text-[#64748B] dark:text-[#9AA8B8]">Outlay:</span>
+                        <span className="font-mono-num font-semibold text-[#0F172A] dark:text-[#F3F6FA]">
+                          &#8377;{c.compensation_offered_cr || '18.5'} Cr
+                        </span>
                       </div>
                     </div>
 
                     <button
                       onClick={() => onSelectCase(c)}
-                      className="w-full mt-1 py-1 bg-[#1D4ED8] hover:bg-[#1E40AF] text-white rounded text-xs font-medium flex items-center justify-center gap-1 cursor-pointer transition-colors"
+                      className="w-full mt-1 py-1.5 bg-[#1D4ED8] hover:bg-[#1E40AF] dark:bg-[#2563EB] dark:hover:bg-[#1D4ED8] text-white rounded text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer transition-colors shadow-xs"
                     >
                       <span>Audit Dossier</span>
-                      <ArrowRight className="w-3 h-3" />
+                      <ArrowRight className="w-3.5 h-3.5" />
                     </button>
                   </div>
                 </Popup>

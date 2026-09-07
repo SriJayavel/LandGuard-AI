@@ -108,8 +108,8 @@ export default function CaseDetailModal({ caseData, onClose }) {
   const currentStageIdx = getStageIndex(currentPhase);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1118]/80 backdrop-blur-xs transition-opacity">
-      <div className="bg-white dark:bg-[#111A24] w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-lg shadow-xl border border-[#E2E8F0] dark:border-[#263342] flex flex-col text-[#0F172A] dark:text-[#F3F6FA]">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[#0B1118]/80 backdrop-blur-sm transition-opacity">
+      <div className="bg-white dark:bg-[#111A24] w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-lg shadow-2xl border border-[#E2E8F0] dark:border-[#263342] flex flex-col text-[#0F172A] dark:text-[#F3F6FA]">
         
         {/* 1. Modal Header Bar */}
         <div className="px-5 py-3.5 border-b border-[#E2E8F0] dark:border-[#263342] flex items-center justify-between sticky top-0 bg-white dark:bg-[#111A24] z-20">
