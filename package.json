@@ -1,7 +1,7 @@
 {
   "name": "cyberleek",
   "version": "1.0.0",
-  "description": "> **Smart India Hackathon 2026 &bull; Problem Statement: PS 26017**   > **Team:** CYBERLEEK   > **System Category:** Enterprise Decision-Support &amp; Statutory Risk Intelligence",
+  "description": "> **Internal Hackathon &bull; Problem Statement: PS 26017**   > **Team:** CYBERLEEK   > **System Category:** Enterprise Decision-Support &amp; Statutory Risk Intelligence",
   "main": "index.js",
   "scripts": {},
   "repository": {

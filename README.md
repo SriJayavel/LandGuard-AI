@@ -10,7 +10,7 @@
 
   <h1>🛡️ LandGuard AI</h1>
   <p><b>Institutional-grade Land Acquisition Risk Intelligence Platform</b></p>
-  <p>Built for the <b>Smart India Hackathon 2026</b> (Problem Statement: PS 26017) by Team <b>CYBERLEEK</b>.</p>
+  <p>Built for an <b>Internal Hackathon</b> (Problem Statement: PS 26017) by Team <b>CYBERLEEK</b>.</p>
 </div>
 
 ---
@@ -101,4 +101,4 @@ LandGuard AI tracks projects across the standard 5-stage RFCTLARR statutory work
 ## 👨‍💻 Developed By
 
 **Team CYBERLEEK**
-*Smart India Hackathon 2026*
+*Internal Hackathon*
