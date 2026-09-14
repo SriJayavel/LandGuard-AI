@@ -1,0 +1,23 @@
+{
+  "name": "cyberleek",
+  "version": "1.0.0",
+  "description": "> **Smart India Hackathon 2026 &bull; Problem Statement: PS 26017**   > **Team:** CYBERLEEK   > **System Category:** Enterprise Decision-Support &amp; Statutory Risk Intelligence",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SriJayavel/LandGuard-AI.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/SriJayavel/LandGuard-AI/issues"
+  },
+  "homepage": "https://github.com/SriJayavel/LandGuard-AI#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@types/node": "^26.4.1"
+  }
+}

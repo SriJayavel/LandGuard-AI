@@ -43,6 +43,9 @@ const generateFallbackCases = () => {
       gram_sabha_consent: 'Granted',
       sia_completed: 'Yes',
       rr_plan_status: 'Approved',
+      survey_number: `Gat No. ${100 + (i % 240) * 3}/${(i % 4) + 1}A`,
+      document_type: i % 4 === 0 ? 'Section 11 Notification' : i % 4 === 1 ? 'Village Form 7/12 (Satbara)' : i % 4 === 2 ? 'Section 19 Declaration' : 'High Court Writ Order',
+      risk_category: riskLevel === 'High' ? (i % 2 === 0 ? 'Litigation & Stay' : 'Valuation Multiplier Appeal') : riskLevel === 'Medium' ? (i % 2 === 0 ? 'Statutory Clearance' : 'R&R Objections') : 'Statutory Compliance Verified',
     };
   });
 };
@@ -56,10 +59,30 @@ export const getCases = async () => {
       return { data: { cases: generateFallbackCases() } };
     }
 
-    const normalized = rawList.map((item, idx) => ({
-      case_id: item.project_id || item.case_id || `LA-${1000 + idx}`,
-      project_name: item.project_name || `${item.district || 'Maharashtra'} Infrastructure (${item.project_id || idx + 1})`,
-      district: item.district || 'Maharashtra',
+    const corridorTypes = [
+      'Ring Road & Bypass Expressway',
+      'Industrial City (AURIC) Multi-Modal Logistics Hub',
+      'Metro Rail Line Phase II Extension',
+      'Semi-High-Speed Rail Freight Corridor',
+      'Agri-Export Logistics Highway Widening',
+      'Special Economic Zone Rail Siding Link',
+      'Smart City Multimodal Transit Corridor',
+      'River Valley Irrigation Canal Alignment'
+    ];
+
+    const normalized = rawList.map((item, idx) => {
+      const pid = item.project_id || item.case_id || `LA-${1000 + idx}`;
+      const dist = item.district || 'Maharashtra';
+      const cleanName = item.project_name
+        ? item.project_name.replace(/\s*\(LA-\d+\)\s*/gi, '')
+        : (pid === 'LA-1059'
+            ? 'Aurangabad Industrial City (AURIC) Multi-Modal Logistics Hub'
+            : `${dist} ${corridorTypes[idx % corridorTypes.length]}`);
+
+      return {
+        case_id: pid,
+        project_name: cleanName,
+        district: dist,
       current_stage: item.stage || item.current_stage || 'Acquisition',
       project_type: item.project_type || 'Infrastructure Corridor',
       risk_score: typeof item.risk_score === 'number' ? item.risk_score : 0.5,
@@ -81,7 +104,11 @@ export const getCases = async () => {
       gram_sabha_consent: item.gram_sabha_consent || 'Granted',
       sia_completed: item.sia_completed || 'Yes',
       rr_plan_status: item.rr_plan_status || 'Approved',
-    }));
+      survey_number: item.survey_number || item.survey_no || `Gat No. ${100 + (idx % 240) * 3}/${(idx % 4) + 1}A`,
+      document_type: item.document_type || item.doc_type || (idx % 4 === 0 ? 'Section 11 Notification' : idx % 4 === 1 ? 'Village Form 7/12 (Satbara)' : idx % 4 === 2 ? 'Section 19 Declaration' : 'High Court Writ Order'),
+      risk_category: item.risk_category || (item.risk_level === 'High' ? (idx % 2 === 0 ? 'Litigation & Stay' : 'Valuation Multiplier Appeal') : item.risk_level === 'Medium' ? (idx % 2 === 0 ? 'Statutory Clearance' : 'R&R Objections') : 'Statutory Compliance Verified')
+    };
+  });
 
     return { data: { cases: normalized } };
   } catch (err) {

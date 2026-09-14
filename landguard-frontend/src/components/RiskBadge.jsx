@@ -13,7 +13,7 @@ export default function RiskBadge({ level = 'Low', score = null, size = 'sm' }) 
 
   const sizeClasses = size === 'md'
     ? 'px-2 py-0.5 text-xs gap-1.5'
-    : 'px-1.5 py-0.5 text-[11px] gap-1';
+    : 'px-1.5 py-0.5 text-2xs gap-1';
 
   const dotSize = 'w-1.5 h-1.5';
 
@@ -23,7 +23,7 @@ export default function RiskBadge({ level = 'Low', score = null, size = 'sm' }) 
         className={`inline-flex items-center font-semibold rounded ${sizeClasses} bg-red-50 text-[#B91C1C] border border-red-200 dark:bg-red-950/30 dark:text-red-300 dark:border-red-900/40`}
       >
         <span className={`${dotSize} rounded-full bg-[#DC2626] shrink-0`}></span>
-        <span className="tracking-wide">CRITICAL</span>
+        <span className="tracking-wide">Critical</span>
         {score !== null && score !== undefined && (
           <span className="font-mono-num ml-0.5 opacity-90">
             {typeof score === 'number' && score <= 1 ? `${Math.round(score * 100)}%` : `${score}%`}
@@ -39,7 +39,7 @@ export default function RiskBadge({ level = 'Low', score = null, size = 'sm' }) 
         className={`inline-flex items-center font-semibold rounded ${sizeClasses} bg-amber-50 text-[#B45309] border border-amber-200 dark:bg-amber-950/30 dark:text-amber-300 dark:border-amber-900/40`}
       >
         <span className={`${dotSize} rounded-full bg-[#D97706] shrink-0`}></span>
-        <span className="tracking-wide">ELEVATED</span>
+        <span className="tracking-wide">Elevated</span>
         {score !== null && score !== undefined && (
           <span className="font-mono-num ml-0.5 opacity-90">
             {typeof score === 'number' && score <= 1 ? `${Math.round(score * 100)}%` : `${score}%`}
@@ -54,7 +54,7 @@ export default function RiskBadge({ level = 'Low', score = null, size = 'sm' }) 
       className={`inline-flex items-center font-semibold rounded ${sizeClasses} bg-emerald-50 text-[#15803D] border border-emerald-200 dark:bg-emerald-950/30 dark:text-emerald-300 dark:border-emerald-900/40`}
     >
       <span className={`${dotSize} rounded-full bg-[#16A34A] shrink-0`}></span>
-      <span className="tracking-wide">STABLE</span>
+      <span className="tracking-wide">Stable</span>
       {score !== null && score !== undefined && (
         <span className="font-mono-num ml-0.5 opacity-90">
           {typeof score === 'number' && score <= 1 ? `${Math.round(score * 100)}%` : `${score}%`}

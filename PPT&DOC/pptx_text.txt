@@ -1,0 +1,265 @@
+--- ppt/slides/slide1.xml ---
+SMART INDIA HACKATHON 2026
+Problem Statement ID – 2601
+7
+Problem Statement Title-Predictive Analytics System for Early Detection of Land Acquisition Delays
+Theme- Smart Automation
+PS Category- Software
+Team ID-
+Team Name
+- CypherLeek
+
+--- ppt/slides/slide2.xml ---
+PREDICTIVE LAND 
+ACQUISITION
+ EARLY-WARNING SYSTEM
+2
+CYBERLEEK
+IDEA / SOLUTION
+A centralized system that predicts land-acquisition delay risks before they become critical, enabling authorities to take preventive action.
+OUR IDEA:
+LandGuard
+ AI
+ predicts land-acquisition delay risks at every project stage. 
+It analyzes 
+revenue, legal, R&R, and project data
+ to identify risks, explains their causes, and 
+alerts officials for early action
+.
+Predict → Explain → Alert → Act
+INNOVATION & UNIQUENESS
+❖ 
+Stage-wise Intelligence
+ — Predicts risk at individual acquisition stages rather than only overall project delay
+❖ 
+Explainable Predictions
+ — Shows 
+why
+ a case is at risk instead of producing a black-box score
+❖ 
+Bottleneck Intelligence
+ — Detects recurring issues affecting multiple projects, regions or departments
+❖ 
+Proactive Decision Support
+ — Moves beyond monitoring by identifying risks early and supporting preventive action
+❖ 
+Predict → Explain → Act
+ — Connects AI prediction directly with administrative intervention
+PROBLEM:
+Land acquisition involves 
+multiple departments, complex procedures, and fragmented records
+, making delays difficult to detect early. This leads to 
+cost overruns, disputes, and stalled projects
+.
+❖ 
+Predictive Intelligence
+ – Stage-wise delay prediction using revenue, legal, R&R & project data.
+❖ 
+Actionable Monitoring
+ – GIS dashboard highlights high-risk projects with automated alerts & recommendations.
+❖ 
+Smart Document & Risk Analysis
+ – NLP/OCR processes legacy records while Explainable AI identifies key risk factors.
+
+--- ppt/slides/slide3.xml ---
+TECHNICAL APPROACH
+3
+SOFTWARE / TECHNOLOGIES
+❖ 
+Python (Pandas, NumPy)
+ – Handles data cleaning, transformation, 
+preprocessing
+ and feature engineering for land-acquisition records.
+❖ 
+Database
+ – Maintains structured project, land, legal, compensation and R&R records for centralized analysis.
+❖ 
+OCR + NLP
+ – Extracts information from scanned and legacy documents using OCR, 
+spaCy
+ and Legal-BERT for legal-text analysis.
+❖ 
+XGBoost
+ / 
+LightGBM
+ – Uses historical and current acquisition data to predict delay risks at individual project stages.
+❖ 
+SHAP / LIME
+ – Provides explainable predictions by identifying the major factors contributing to each delay-risk score.
+❖ 
+Flask/Django + React.js + GIS
+ – Integrates backend APIs, interactive dashboards, geographic risk visualization and automated alerts.
+FLOW CHART
+CYBERLEEK
+
+--- ppt/slides/slide4.xml ---
+FEASIBILITY AND VIABILITY
+4
+FEASIBILITY:
+❖ 
+Technical
+ – Proven ML/NLP models can integrate through standard REST APIs.
+❖ 
+Operational
+ – Fits existing district revenue workflows without disrupting current procedures.
+❖ 
+Data
+ – OCR and NLP enable processing of both structured and legacy records.
+❖ 
+Cost
+ – Open-source technologies keep development and deployment costs low.
+VIABILITY:
+❖ 
+Scalable
+ – Can expand from pilot districts to state-level implementation.
+❖ 
+Integrable
+ – Designed to work alongside existing land-record systems and portals.
+❖ 
+Actionable
+ – Risk scores, explanations and alerts directly support officials' decisions.
+❖ 
+Long-term
+ – Continuous feedback improves predictions as more acquisition cases are processed.
+CHALLENGES:
+❖ 
+Data Fragmentation
+ – Revenue, legal and R&R records remain distributed across departments.
+❖ 
+Legacy Documents
+ – Records may be scanned, inconsistent or in regional languages.
+❖ 
+Data Quality
+ – Missing or outdated records can affect prediction accuracy.
+❖ 
+User Trust
+ – Officials may hesitate to rely on unexplained AI predictions.
+MITIGATION STRATEGY
+:
+❖ 
+Unified ETL + OCR
+ – Standardizes data from multiple departments and legacy documents.
+❖ 
+Multilingual NLP
+ – Extracts useful information from regional-language records.
+❖ 
+Explainable AI
+ – SHAP/LIME shows the factors behind each risk score.
+❖ 
+Human-in-the-Loop
+ – Officer feedback and case outcomes continuously improve the system.
+CYBERLEEK
+
+--- ppt/slides/slide5.xml ---
+IMPACT AND BENEFITS
+5
+DIRECT IMPACT ON TARGET USERS
+❖ 
+Revenue & Nodal Officers
+ – Prioritize high-risk cases through early alerts.
+❖ 
+Project Authorities
+ – Identify bottlenecks for faster intervention.
+❖ 
+Landowners & Families
+ – Reduce compensation and R&R-related delays.
+❖ 
+Government Departments
+ – Improve coordination through shared risk visibility.
+STRATEGIC IMPACT
+❖ 
+Proactive Governance
+ – Enables early intervention instead of reactive monitoring.
+❖ 
+Data-Driven Decisions
+ – Converts fragmented records into actionable insights.
+❖ 
+Greater Transparency
+ – Explains the reasons behind flagged risks.
+❖ 
+Scalable Monitoring
+ – Identifies project and regional bottlenecks
+.
+ECONOMIC & OPERATIONAL BENEFITS
+❖ 
+Reduced Project Delays
+ – Detects bottlenecks before they escalate.
+❖ 
+Lower Cost Overruns
+ – Enables faster intervention and resource planning.
+❖ 
+Faster R&R & Compensation
+ – Highlights cases needing immediate attention.
+❖ 
+Improved Accountability
+ – Tracks alerts, risks and follow-up actions.
+CYBERLEEK
+
+--- ppt/slides/slide6.xml ---
+RESEARCH & REFERENCES
+6
+GOVERNMENT DATA
+MoSPI
+ Reports
+41.59%
+Infrastructure projects faced time overruns due to land acquisition (March 2024).
+DILRMP Portal
+95.09%
+Villages with computerized Records of Rights (
+RoRs
+) integrated (Dec 2023).
+❖ 
+MoSPI
+ Reports
+ 
+– Infrastructure project cost & time overrun context.
+❖ 
+PM 
+GatiShakti
+ 
+– Geospatial planning & inter-department coordination.
+❖ 
+DILRMP
+ – Digital land-record management and integration.
+LEGAL & POLICY
+RFCTLARR Act, 2013
+Acquisition & R&R Framework
+Statutory framework governing land acquisition, fair compensation, and R&R procedures
+.
+NAKSHA Portal
+GIS Digital Land Maps
+Department of Land Resources GIS-integrated digital maps, drone & Web-GIS data.
+❖ 
+RFCTLARR Act, 2013
+ 
+– Land acquisition, compensation & R&R framework.
+❖ 
+Acquisition Workflows
+ 
+– Reference for acquisition stages & statutory procedures
+.
+TECHNICAL BASIS
+XGBoost
+ / 
+LightGBM
+Risk Prediction Engine
+Gradient-boosting algorithms for multi-factor stage-wise delay risk prediction.
+SHAP / LIME & Legal-BERT
+Explainable AI & Legal NLP
+Factor attribution for predictions and NLP extraction of legal entities and clauses.
+❖ 
+XGBoost
+ / 
+LightGBM
+ – Predictive risk modelling.
+❖ 
+SHAP
+ / 
+LIME
+ – Explainable AI & risk-factor analysis.
+❖ 
+Legal-BERT
+ / 
+NLP
+ – Legal document understanding & extraction.
+CYBERLEEK

@@ -1,336 +1,273 @@
 import React, { useMemo } from 'react';
 import RiskBadge from './RiskBadge';
 import {
-  FolderKanban, Clock,
-  ArrowRight, ChevronRight, MapPin
+  ArrowRight, ChevronRight, AlertTriangle, Clock,
+  FolderKanban, Activity, MapPin, Sliders, ClipboardList, Zap, X
 } from 'lucide-react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 
 export default function OverviewView({
   cases = [],
-  onSelectCase,
-  onViewAllProjects,
-  onViewAlerts,
-  onViewBottlenecks,
-  onViewMap
+  onSelectCase = () => {},
+  onViewAllProjects = () => {},
+  onNavigate = () => {},
+  selectedDivision = 'All Divisions',
+  onResetDivision = () => {}
 }) {
   const totalCases = cases.length || 600;
-  const criticalCases = useMemo(() => cases.filter((c) => c.risk_level === 'High'), [cases]);
-  const criticalCount = criticalCases.length || 265;
-  const mediumCount = cases.filter((c) => c.risk_level === 'Medium').length || 215;
-  const lowCount = cases.filter((c) => c.risk_level === 'Low').length || 120;
 
-  const totalOutlayAtRisk = useMemo(() => {
+  // Derive metrics from live data or fall back to demo values
+  const criticalCases = useMemo(() => cases.filter(c => c.risk_level === 'High'), [cases]);
+  const mediumCases = useMemo(() => cases.filter(c => c.risk_level === 'Medium'), [cases]);
+  const lowCases = useMemo(() => cases.filter(c => c.risk_level === 'Low'), [cases]);
+
+  const criticalCount = cases.length > 0 ? criticalCases.length : 265;
+  const mediumCount = cases.length > 0 ? mediumCases.length : 320;
+  const lowCount = cases.length > 0 ? lowCases.length : 240;
+
+  const totalOutlay = useMemo(() => {
+    if (cases.length === 0) return '8,398.7';
     return criticalCases
       .reduce((sum, c) => sum + (parseFloat(c.compensation_offered_cr) || 16.5), 0)
       .toFixed(1);
-  }, [criticalCases]);
+  }, [cases, criticalCases]);
 
-  const avgDaysInStage = useMemo(() => {
-    if (cases.length === 0) return 54.8;
-    const totalDays = cases.reduce((acc, c) => acc + (parseInt(c.days_in_stage) || 45), 0);
-    return (totalDays / cases.length).toFixed(1);
+  const avgDays = useMemo(() => {
+    if (cases.length === 0) return 60;
+    const total = cases.reduce((acc, c) => acc + (parseInt(c.days_in_stage) || 45), 0);
+    return Math.round(total / cases.length);
   }, [cases]);
 
-  // Risk Distribution Data (Restrained: Red, Amber, Green)
-  const riskDistribution = useMemo(() => [
-    { name: 'Critical Risk', value: criticalCount, color: '#DC2626', pct: Math.round((criticalCount / totalCases) * 100) },
-    { name: 'Elevated Risk', value: mediumCount, color: '#D97706', pct: Math.round((mediumCount / totalCases) * 100) },
-    { name: 'Stable Process', value: lowCount, color: '#16A34A', pct: Math.round((lowCount / totalCases) * 100) },
-  ], [criticalCount, mediumCount, lowCount, totalCases]);
+  const criticalPct = Math.round((criticalCount / totalCases) * 100);
 
-  // Priority queue: Critical cases sorted by delay probability
-  const topCriticalProjects = useMemo(() => {
-    return [...criticalCases]
+  // Risk distribution for donut
+  const riskDistribution = [
+    { name: 'High Risk', value: criticalCount, color: '#EF4444' },
+    { name: 'Medium Risk', value: mediumCount, color: '#F59E0B' },
+    { name: 'On Track', value: lowCount, color: '#10B981' },
+  ];
+
+  // Priority cases list
+  const priorityCases = useMemo(() => {
+    const demo = [
+      { case_id: 'LA-1059', project_name: 'Aurangabad Industrial City Logistics Hub', district: 'Aurangabad', current_stage: 'Compensation', compensation_offered_cr: '50.3', risk_level: 'High', risk_score: 0.94, days_in_stage: 88 },
+      { case_id: 'LA-1028', project_name: 'Nagpur Agri-Export Highway Widening', district: 'Nagpur', current_stage: 'Possession', compensation_offered_cr: '46.1', risk_level: 'High', risk_score: 0.91, days_in_stage: 72 },
+      { case_id: 'LA-1068', project_name: 'Pune Agri-Export Highway Widening', district: 'Pune', current_stage: 'Award', compensation_offered_cr: '46.1', risk_level: 'High', risk_score: 0.89, days_in_stage: 81 },
+      { case_id: 'LA-1041', project_name: 'Nashik Ring Road Expansion', district: 'Nashik', current_stage: 'Survey', compensation_offered_cr: '38.2', risk_level: 'High', risk_score: 0.86, days_in_stage: 55 },
+      { case_id: 'LA-1055', project_name: 'Amravati Solar Corridor', district: 'Amravati', current_stage: 'Notification', compensation_offered_cr: '22.7', risk_level: 'High', risk_score: 0.82, days_in_stage: 34 },
+    ];
+
+    if (cases.length === 0) return demo;
+    return [...cases]
+      .filter(c => c.risk_level === 'High')
       .sort((a, b) => (parseFloat(b.risk_score) || 0) - (parseFloat(a.risk_score) || 0))
-      .slice(0, 5);
-  }, [criticalCases]);
+      .slice(0, 5)
+      .map(c => ({ ...c, case_id: c.case_id || c.project_id }));
+  }, [cases]);
 
-  // Project lifecycle stages
-  const projectStages = [
-    { id: 'sec11', title: 'Preliminary Notification', section: 'Phase 1', cases: 112, stalled: 22, isBottleneck: false },
-    { id: 'sia', title: 'Impact Assessment & Surveys', section: 'Phase 2', cases: 86, stalled: 18, isBottleneck: false },
-    { id: 'sec19', title: 'Corridor Purpose Declaration', section: 'Phase 3', cases: 142, stalled: 48, isBottleneck: true },
-    { id: 'sec23', title: 'Valuation & Claims Inquiry', section: 'Phase 4', cases: 138, stalled: 36, isBottleneck: false },
-    { id: 'sec38', title: 'Compensation & Transfer', section: 'Phase 5', cases: 122, stalled: 29, isBottleneck: false },
-  ];
-
-  // District distribution
-  const districtSummary = [
-    { district: 'Amravati', critical: 34, total: 75, leadIssue: 'Valuation & multiplier appeals' },
-    { district: 'Pune', critical: 31, total: 85, leadIssue: 'Judicial writ stays' },
-    { district: 'Nashik', critical: 28, total: 70, leadIssue: 'Forest land diversion delays' },
-    { district: 'Nagpur', critical: 24, total: 72, leadIssue: 'R&R township site objections' },
-    { district: 'Aurangabad', critical: 22, total: 78, leadIssue: 'Industrial corridor compensation' },
-    { district: 'Kolhapur', critical: 18, total: 68, leadIssue: 'Agricultural title reconciliation' },
-  ];
+  // District summary
+  const districtSummary = useMemo(() => {
+    const districts = ['Pune', 'Nagpur', 'Nashik', 'Amravati', 'Aurangabad', 'Kolhapur'];
+    if (cases.length === 0) {
+      return [
+        { district: 'Pune', total: 102, critical: 41 },
+        { district: 'Nagpur', total: 88, critical: 32 },
+        { district: 'Nashik', total: 76, critical: 28 },
+        { district: 'Amravati', total: 95, critical: 51 },
+        { district: 'Aurangabad', total: 112, critical: 67 },
+        { district: 'Kolhapur', total: 127, critical: 46 },
+      ];
+    }
+    const map = {};
+    cases.forEach(c => {
+      const d = c.district || 'Maharashtra';
+      if (!map[d]) map[d] = { district: d, total: 0, critical: 0 };
+      map[d].total++;
+      if (c.risk_level === 'High') map[d].critical++;
+    });
+    return Object.values(map).sort((a, b) => b.critical - a.critical).slice(0, 6);
+  }, [cases]);
 
   return (
-    <div className="space-y-5">
-      {/* Page Title */}
-      <div className="flex flex-wrap items-center justify-between gap-3">
+    <div className="space-y-5 animate-fadeIn">
+      {/* ── Page header ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-lg font-bold text-[#0F2942] dark:text-[#F3F6FA] tracking-tight">
-            Executive Risk Overview
-          </h1>
-          <p className="text-xs text-[#64748B] dark:text-[#9AA8B8] mt-0.5">
-            Real-time monitoring and delay risk intelligence across 600 land acquisition projects
+          <div className="flex items-center gap-2">
+            <h1 className="text-xl font-bold text-slate-900 dark:text-[#EEF2F7] tracking-tight">
+              Overview
+            </h1>
+            {selectedDivision !== 'All Divisions' && (
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800/40">
+                {selectedDivision}
+                <button onClick={onResetDivision} className="hover:text-red-500 cursor-pointer ml-0.5">
+                  <X className="w-3 h-3" />
+                </button>
+              </span>
+            )}
+          </div>
+          <p className="text-sm text-slate-500 dark:text-[#7A8A9A] mt-0.5">
+            {totalCases} active cases across Maharashtra
           </p>
         </div>
 
         <div className="flex items-center gap-2">
           <button
-            onClick={onViewAlerts}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-white dark:bg-[#111A24] hover:bg-[#F8FAFC] dark:hover:bg-[#151F2B] text-xs font-semibold text-[#0F172A] dark:text-[#F3F6FA] border border-[#E2E8F0] dark:border-[#263342] rounded transition-colors cursor-pointer"
+            onClick={() => onNavigate('simulator')}
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg transition-colors cursor-pointer"
           >
-            <span className="w-2 h-2 rounded-full bg-[#DC2626]"></span>
-            <span>{criticalCount} Critical Alerts</span>
+            <Sliders className="w-3.5 h-3.5" />
+            Simulate
           </button>
-        </div>
-      </div>
-
-      {/* 1. Metric Hierarchy */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
-        {/* DOMINANT CARD: Critical Cases & Exposure */}
-        <div className="gov-card p-4 flex flex-col justify-between border-l-4 border-l-[#DC2626] sm:col-span-2 bg-[#FFFFFF] dark:bg-[#111A24]">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-[#B91C1C] dark:text-red-400 uppercase tracking-wider">
-              Priority Review Required
-            </span>
-            <span className="text-[11px] font-mono-num text-[#64748B] dark:text-[#9AA8B8]">
-              Litigation &amp; Valuation Risk
-            </span>
-          </div>
-
-          <div className="my-3 flex flex-wrap items-baseline gap-4">
-            <div>
-              <span className="text-3xl font-bold font-mono-num text-[#DC2626]">
-                {criticalCount}
-              </span>
-              <span className="text-xs text-[#64748B] dark:text-[#9AA8B8] ml-1.5 font-medium">
-                High-Risk Cases
-              </span>
-            </div>
-            <div className="border-l border-[#E2E8F0] dark:border-[#263342] pl-4">
-              <span className="text-2xl font-bold font-mono-num text-[#0F172A] dark:text-[#F3F6FA]">
-                &#8377;{totalOutlayAtRisk} Cr
-              </span>
-              <span className="text-xs text-[#64748B] dark:text-[#9AA8B8] ml-1.5 font-medium">
-                Outlay at Risk
-              </span>
-            </div>
-          </div>
-
-          <div className="text-[11px] text-[#64748B] dark:text-[#9AA8B8] pt-2 border-t border-[#E2E8F0] dark:border-[#263342] flex items-center justify-between">
-            <span>44% of monitored caseload has pending litigation or stage delay</span>
-            <button
-              onClick={onViewAlerts}
-              className="text-[#1D4ED8] dark:text-[#3B82F6] font-semibold hover:underline flex items-center gap-1 cursor-pointer"
-            >
-              <span>View Alert Queue</span>
-              <ArrowRight className="w-3 h-3" />
-            </button>
-          </div>
-        </div>
-
-        {/* SECONDARY CARD 1: Total Active Cases */}
-        <div className="gov-card p-4 flex flex-col justify-between bg-white dark:bg-[#111A24]">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-[#64748B] dark:text-[#9AA8B8] uppercase tracking-wider">
-              Monitored Portfolio
-            </span>
-            <FolderKanban className="w-4 h-4 text-[#64748B] dark:text-[#6F7D8D]" />
-          </div>
-          <div className="my-2 flex items-baseline gap-2">
-            <span className="text-2xl font-bold font-mono-num text-[#0F172A] dark:text-[#F3F6FA]">
-              {totalCases}
-            </span>
-            <span className="text-xs text-[#64748B] dark:text-[#9AA8B8]">active cases</span>
-          </div>
-          <div className="text-[11px] text-[#64748B] dark:text-[#9AA8B8] pt-2 border-t border-[#E2E8F0] dark:border-[#263342]">
-            Total Land Area: ~84,200 Acres
-          </div>
-        </div>
-
-        {/* SECONDARY CARD 2: Average Stage Delay */}
-        <div className="gov-card p-4 flex flex-col justify-between bg-white dark:bg-[#111A24]">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-[#64748B] dark:text-[#9AA8B8] uppercase tracking-wider">
-              Avg Stage Duration
-            </span>
-            <Clock className="w-4 h-4 text-[#64748B] dark:text-[#6F7D8D]" />
-          </div>
-          <div className="my-2 flex items-baseline gap-2">
-            <span className="text-2xl font-bold font-mono-num text-[#0F172A] dark:text-[#F3F6FA]">
-              {avgDaysInStage}d
-            </span>
-            <span className="text-xs text-[#64748B] dark:text-[#9AA8B8]">current phase</span>
-          </div>
-          <div className="text-[11px] text-[#64748B] dark:text-[#9AA8B8] pt-2 border-t border-[#E2E8F0] dark:border-[#263342]">
-            Target Timeline: &le; 30 Days
-          </div>
-        </div>
-      </div>
-
-      {/* 2. Project Acquisition Lifecycle Breakdown */}
-      <div className="gov-card p-4 space-y-3 bg-white dark:bg-[#111A24]">
-        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#E2E8F0] dark:border-[#263342] pb-2.5">
-          <div>
-            <h2 className="text-xs font-bold uppercase tracking-wider text-[#0F2942] dark:text-[#F3F6FA]">
-              Project Acquisition Lifecycle
-            </h2>
-            <p className="text-[11px] text-[#64748B] dark:text-[#9AA8B8] mt-0.5">
-              Case distribution across lifecycle milestones. Red flags indicate active procedural bottlenecks.
-            </p>
-          </div>
           <button
-            onClick={onViewBottlenecks}
-            className="text-xs font-semibold text-[#1D4ED8] dark:text-[#38BDF8] hover:underline flex items-center gap-1 cursor-pointer"
+            onClick={() => onNavigate('actions')}
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-white dark:bg-[#181E28] hover:bg-slate-50 dark:hover:bg-[#1E2533] border border-slate-200 dark:border-[rgba(255,255,255,0.08)] text-slate-700 dark:text-[#B8C4D0] text-xs font-semibold rounded-lg transition-colors cursor-pointer"
           >
-            <span>Bottleneck Analysis</span>
-            <ChevronRight className="w-3 h-3" />
+            <ClipboardList className="w-3.5 h-3.5" />
+            Log Action
           </button>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-2.5 text-xs">
-          {projectStages.map((stg, idx) => (
-            <div
-              key={stg.id}
-              className={`p-2.5 rounded border transition-colors ${
-                stg.isBottleneck
-                  ? 'bg-red-50/40 border-red-200 dark:bg-red-950/20 dark:border-red-900/40'
-                  : 'bg-[#F8FAFC] border-[#E2E8F0] dark:bg-[#151F2B] dark:border-[#263342]'
-              }`}
-            >
-              <div className="flex items-center justify-between text-[10px] text-[#64748B] dark:text-[#9AA8B8]">
-                <span className="font-mono-num font-semibold">Stage 0{idx + 1}</span>
-                <span className="font-mono">{stg.section}</span>
-              </div>
-              <div className="font-semibold text-[#0F172A] dark:text-[#F3F6FA] text-xs mt-1 truncate">
-                {stg.title}
-              </div>
-              <div className="mt-2 pt-2 border-t border-[#E2E8F0]/80 dark:border-[#263342]/80 flex justify-between text-[11px] font-mono-num">
-                <span className="text-[#64748B] dark:text-[#9AA8B8]">{stg.cases} cases</span>
-                <span className={stg.isBottleneck ? 'text-[#DC2626] font-bold' : 'text-[#64748B] dark:text-[#9AA8B8]'}>
-                  {stg.stalled} stalled
-                </span>
-              </div>
-            </div>
-          ))}
         </div>
       </div>
 
-      {/* 3. Main Grid: Priority Work Queue (2 Cols) + Risk Donut (1 Col) */}
+      {/* ── KPI cards ── */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="glass-card p-4 border-l-4 border-l-red-500 col-span-2 sm:col-span-1 space-y-1">
+          <div className="flex items-center gap-1 text-xs font-semibold text-red-500 uppercase tracking-wide">
+            <AlertTriangle className="w-3.5 h-3.5" />
+            Critical
+          </div>
+          <div className="flex items-baseline gap-2">
+            <span className="text-3xl font-bold font-mono text-red-600 dark:text-red-400">{criticalCount}</span>
+            <span className="text-xs text-slate-500 dark:text-[#7A8A9A]">cases</span>
+          </div>
+          <div className="text-xs text-slate-500 dark:text-[#7A8A9A]">₹{totalOutlay} Cr at risk</div>
+        </div>
+
+        <div className="glass-card p-4 space-y-1">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-slate-500 dark:text-[#7A8A9A] uppercase tracking-wide">Total</span>
+            <FolderKanban className="w-4 h-4 text-blue-500" />
+          </div>
+          <div className="flex items-baseline gap-2">
+            <span className="text-3xl font-bold font-mono text-slate-800 dark:text-[#EEF2F7]">{totalCases}</span>
+            <span className="text-xs text-slate-500 dark:text-[#7A8A9A]">projects</span>
+          </div>
+          <div className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">{lowCount} on schedule</div>
+        </div>
+
+        <div className="glass-card p-4 space-y-1">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-slate-500 dark:text-[#7A8A9A] uppercase tracking-wide">Avg Duration</span>
+            <Clock className="w-4 h-4 text-amber-500" />
+          </div>
+          <div className="flex items-baseline gap-2">
+            <span className="text-3xl font-bold font-mono text-slate-800 dark:text-[#EEF2F7]">{avgDays}</span>
+            <span className="text-xs text-slate-500 dark:text-[#7A8A9A]">days/stage</span>
+          </div>
+          <div className="text-xs text-amber-600 dark:text-amber-400 font-medium">+14d vs benchmark</div>
+        </div>
+
+        <div className="glass-card p-4 space-y-1">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-slate-500 dark:text-[#7A8A9A] uppercase tracking-wide">Risk Rate</span>
+            <Activity className="w-4 h-4 text-violet-500" />
+          </div>
+          <div className="flex items-baseline gap-2">
+            <span className="text-3xl font-bold font-mono text-slate-800 dark:text-[#EEF2F7]">{criticalPct}%</span>
+          </div>
+          <div className="text-xs text-slate-500 dark:text-[#7A8A9A]">of portfolio stalled</div>
+        </div>
+      </div>
+
+      {/* ── Priority Cases + Risk Donut ── */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Priority Work Queue */}
-        <div className="lg:col-span-2 gov-card p-4 space-y-3 bg-white dark:bg-[#111824]">
-          <div className="flex items-center justify-between border-b border-[#E2E8F0] dark:border-[#263342] pb-2.5">
-            <div>
-              <h2 className="text-xs font-bold uppercase tracking-wider text-[#0F2942] dark:text-[#F3F6FA]">
-                Priority Risk Intervention Queue
-              </h2>
-              <p className="text-[11px] text-[#64748B] dark:text-[#9AA8B8] mt-0.5">
-                Projects ranked by delay probability requiring operational review
-              </p>
-            </div>
+        {/* Priority Cases */}
+        <div className="glass-card p-4 lg:col-span-2 space-y-3">
+          <div className="flex items-center justify-between">
+            <h2 className="text-sm font-semibold text-slate-800 dark:text-[#EEF2F7]">Priority Cases</h2>
             <button
               onClick={onViewAllProjects}
-              className="text-xs font-semibold text-[#1D4ED8] dark:text-[#3B82F6] hover:underline flex items-center gap-1 cursor-pointer"
+              className="text-xs text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1 cursor-pointer font-medium"
             >
-              <span>All Projects ({totalCases})</span>
-              <ChevronRight className="w-3 h-3" />
+              View all <ChevronRight className="w-3.5 h-3.5" />
             </button>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs border-collapse">
-              <thead>
-                <tr className="text-[#64748B] dark:text-[#9AA8B8] border-b border-[#E2E8F0] dark:border-[#263342] text-[11px] uppercase tracking-wider">
-                  <th className="py-2 px-3 font-mono">Case ID</th>
-                  <th className="py-2 px-3">Project Title</th>
-                  <th className="py-2 px-3">District</th>
-                  <th className="py-2 px-3">Phase</th>
-                  <th className="py-2 px-3">Severity</th>
-                  <th className="py-2 px-3 text-right">Action</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[#E2E8F0] dark:divide-[#263342]">
-                {topCriticalProjects.map((p) => {
-                  const caseId = p.case_id || p.project_id;
-                  return (
-                    <tr
-                      key={caseId}
-                      className="hover:bg-[#F8FAFC] dark:hover:bg-[#151F2B] transition-colors"
+          <div className="space-y-2">
+            {priorityCases.map((proj) => (
+              <div
+                key={proj.case_id}
+                className="flex items-center gap-3 p-2.5 rounded-lg bg-slate-50 dark:bg-[#0F131A] border border-slate-200 dark:border-[rgba(255,255,255,0.06)] hover:border-slate-300 dark:hover:border-[rgba(255,255,255,0.12)] transition-colors"
+              >
+                {/* ID + Name */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => onSelectCase(proj)}
+                      className="text-xs font-mono font-bold text-blue-600 dark:text-[#4D8EF0] hover:underline cursor-pointer shrink-0"
                     >
-                      <td className="py-2.5 px-3 font-mono-num font-semibold text-[#1D4ED8] dark:text-[#3B82F6]">
-                        {caseId}
-                      </td>
-                      <td className="py-2.5 px-3 font-medium text-[#0F172A] dark:text-[#F3F6FA] max-w-[200px] truncate">
-                        {p.project_name}
-                      </td>
-                      <td className="py-2.5 px-3 text-[#64748B] dark:text-[#9AA8B8]">
-                        {p.district}
-                      </td>
-                      <td className="py-2.5 px-3 text-[#334155] dark:text-[#CBD5E1]">
-                        {p.current_stage || p.stage}
-                      </td>
-                      <td className="py-2.5 px-3">
-                        <RiskBadge level={p.risk_level} />
-                      </td>
-                      <td className="py-2.5 px-3 text-right">
-                        <button
-                          onClick={() => onSelectCase(p)}
-                          className="px-2 py-1 text-xs font-semibold text-[#1D4ED8] dark:text-[#3B82F6] hover:underline cursor-pointer inline-flex items-center gap-1"
-                        >
-                          <span>Audit Dossier</span>
-                          <ArrowRight className="w-3 h-3" />
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                      {proj.case_id}
+                    </button>
+                    <span className="text-xs font-medium text-slate-800 dark:text-[#B8C4D0] truncate">
+                      {proj.project_name || 'Land Acquisition Project'}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 mt-0.5">
+                    <span className="flex items-center gap-1 text-xs text-slate-500 dark:text-[#7A8A9A]">
+                      <MapPin className="w-3 h-3" />
+                      {proj.district}
+                    </span>
+                    <span className="text-xs text-slate-400 dark:text-[#4D5C6E]">·</span>
+                    <span className="text-xs text-slate-500 dark:text-[#7A8A9A]">{proj.current_stage}</span>
+                    <span className="text-xs text-slate-400 dark:text-[#4D5C6E]">·</span>
+                    <span className="text-xs font-mono text-red-500 dark:text-red-400">{proj.days_in_stage}d elapsed</span>
+                  </div>
+                </div>
+
+                {/* Risk + Actions */}
+                <div className="flex items-center gap-2 shrink-0">
+                  <RiskBadge level={proj.risk_level} score={proj.risk_score} size="sm" />
+                  <button
+                    onClick={() => onNavigate('simulator')}
+                    className="px-2 py-1 text-xs font-medium rounded bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800/30 hover:bg-blue-100 dark:hover:bg-blue-900/40 cursor-pointer transition-colors"
+                  >
+                    <Zap className="w-3 h-3 inline mr-0.5" />
+                    Simulate
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* Risk Donut Chart */}
-        <div className="gov-card p-4 space-y-3 flex flex-col justify-between bg-white dark:bg-[#111A24]">
-          <div className="border-b border-[#E2E8F0] dark:border-[#263342] pb-2.5">
-            <h2 className="text-xs font-bold uppercase tracking-wider text-[#0F2942] dark:text-[#F3F6FA]">
-              Portfolio Risk Distribution
-            </h2>
-            <p className="text-[11px] text-[#64748B] dark:text-[#9AA8B8] mt-0.5">
-              Severity categorization across cases
-            </p>
-          </div>
+        {/* Risk Donut */}
+        <div className="glass-card p-4 flex flex-col space-y-3">
+          <h2 className="text-sm font-semibold text-slate-800 dark:text-[#EEF2F7]">Risk Distribution</h2>
 
-          <div className="h-44 w-full flex items-center justify-center relative">
-            <ResponsiveContainer width="100%" height={170}>
+          <div className="flex-1 flex items-center justify-center">
+            <ResponsiveContainer width="100%" height={160}>
               <PieChart>
                 <Pie
                   data={riskDistribution}
                   cx="50%"
                   cy="50%"
-                  innerRadius={45}
-                  outerRadius={70}
+                  innerRadius={48}
+                  outerRadius={72}
                   paddingAngle={2}
                   dataKey="value"
                 >
                   {riskDistribution.map((entry, idx) => (
-                    <Cell key={`cell-${idx}`} fill={entry.color} />
+                    <Cell key={idx} fill={entry.color} />
                   ))}
                 </Pie>
                 <Tooltip
                   content={({ active, payload }) => {
-                    if (active && payload && payload.length) {
+                    if (active && payload?.length) {
                       const d = payload[0].payload;
                       return (
-                        <div className="bg-white dark:bg-[#151F2B] p-2 rounded shadow border border-[#E2E8F0] dark:border-[#263342] text-xs">
-                          <span className="font-semibold block" style={{ color: d.color }}>{d.name}</span>
-                          <span className="font-mono-num text-[#0F172A] dark:text-[#F3F6FA]">
-                            {d.value} cases ({d.pct}%)
-                          </span>
+                        <div className="bg-white dark:bg-[#181E28] border border-slate-200 dark:border-[rgba(255,255,255,0.08)] rounded-lg p-2 text-xs shadow-lg">
+                          <div className="font-semibold mb-0.5" style={{ color: d.color }}>{d.name}</div>
+                          <div className="text-slate-600 dark:text-[#B8C4D0]">{d.value} cases</div>
                         </div>
                       );
                     }
@@ -341,62 +278,86 @@ export default function OverviewView({
             </ResponsiveContainer>
           </div>
 
-          <div className="space-y-1.5 pt-2 border-t border-[#E2E8F0] dark:border-[#263342] text-xs">
-            {riskDistribution.map((item) => (
-              <div key={item.name} className="flex items-center justify-between">
-                <span className="flex items-center gap-2 text-[#475569] dark:text-[#9AA8B8]">
-                  <span className="w-2 h-2 rounded-full" style={{ backgroundColor: item.color }}></span>
-                  <span>{item.name}</span>
+          <div className="space-y-2 border-t border-slate-200 dark:border-[rgba(255,255,255,0.07)] pt-3">
+            {riskDistribution.map(item => (
+              <div key={item.name} className="flex items-center justify-between text-xs">
+                <span className="flex items-center gap-2 text-slate-600 dark:text-[#B8C4D0]">
+                  <span className="w-2 h-2 rounded-full" style={{ backgroundColor: item.color }} />
+                  {item.name}
                 </span>
-                <span className="font-mono-num font-semibold text-[#0F172A] dark:text-[#F3F6FA]">
-                  {item.value} ({item.pct}%)
-                </span>
+                <span className="font-semibold font-mono text-slate-800 dark:text-[#EEF2F7]">{item.value}</span>
               </div>
             ))}
           </div>
         </div>
       </div>
 
-      {/* 4. Regional Risk Concentration Barometer */}
-      <div className="gov-card p-4 space-y-3 bg-white dark:bg-[#111A24]">
-        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#E2E8F0] dark:border-[#263342] pb-2.5">
-          <div>
-            <h2 className="text-xs font-bold uppercase tracking-wider text-[#0F2942] dark:text-[#F3F6FA] flex items-center gap-1.5">
-              <MapPin className="w-3.5 h-3.5 text-[#1D4ED8] dark:text-[#3B82F6]" />
-              <span>Regional Risk Concentration</span>
-            </h2>
-            <p className="text-[11px] text-[#64748B] dark:text-[#9AA8B8] mt-0.5">
-              Districts with highest active litigation and compensation dispute volume
-            </p>
-          </div>
+      {/* ── Regional Breakdown ── */}
+      <div className="glass-card p-4 space-y-3">
+        <div className="flex items-center justify-between">
+          <h2 className="text-sm font-semibold text-slate-800 dark:text-[#EEF2F7] flex items-center gap-1.5">
+            <MapPin className="w-4 h-4 text-blue-500" />
+            Regional Breakdown
+          </h2>
           <button
-            onClick={onViewMap}
-            className="text-xs font-semibold text-[#1D4ED8] dark:text-[#3B82F6] hover:underline flex items-center gap-1 cursor-pointer"
+            onClick={() => onNavigate('map')}
+            className="text-xs text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1 cursor-pointer font-medium"
           >
-            <span>Open GIS Map</span>
-            <ChevronRight className="w-3 h-3" />
+            Open Map <ChevronRight className="w-3.5 h-3.5" />
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-3 pt-1">
-          {districtSummary.map((d) => (
-            <div
-              key={d.district}
-              className="p-2.5 bg-[#F8FAFC] dark:bg-[#151F2B] rounded border border-[#E2E8F0] dark:border-[#263342] space-y-1"
-            >
-              <div className="flex justify-between items-center text-xs">
-                <span className="font-bold text-[#0F172A] dark:text-[#F3F6FA]">{d.district}</span>
-                <span className="font-mono-num font-bold text-[#DC2626]">{d.critical} critical</span>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+          {districtSummary.map(d => {
+            const critRate = d.total > 0 ? Math.round((d.critical / d.total) * 100) : 0;
+            return (
+              <div
+                key={d.district}
+                className="p-3 rounded-lg bg-slate-50 dark:bg-[#0F131A] border border-slate-200 dark:border-[rgba(255,255,255,0.06)] space-y-1.5"
+              >
+                <div className="text-xs font-semibold text-slate-800 dark:text-[#EEF2F7] truncate">{d.district}</div>
+                <div className="flex items-baseline justify-between">
+                  <span className="text-xl font-bold font-mono text-slate-800 dark:text-[#EEF2F7]">{d.total}</span>
+                  {d.critical > 0 && (
+                    <span className="text-xs font-bold text-red-500 dark:text-red-400">{d.critical} ⚠</span>
+                  )}
+                </div>
+                <div className="h-1.5 w-full rounded-full bg-slate-200 dark:bg-[#181E28] overflow-hidden">
+                  <div
+                    className="h-full rounded-full bg-red-500 transition-all"
+                    style={{ width: `${critRate}%` }}
+                  />
+                </div>
+                <div className="text-xs text-slate-500 dark:text-[#7A8A9A]">{critRate}% critical</div>
               </div>
-              <p className="text-[10px] text-[#64748B] dark:text-[#9AA8B8] truncate" title={d.leadIssue}>
-                {d.leadIssue}
-              </p>
-              <div className="text-[10px] font-mono-num text-[#9AA8B8] dark:text-[#6F7D8D] pt-1">
-                {d.total} total cases
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
+      </div>
+
+      {/* ── Quick Links ── */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        {[
+          { label: 'Full Portfolio', icon: FolderKanban, action: onViewAllProjects, color: 'text-blue-500' },
+          { label: 'Bottleneck Analysis', icon: Activity, action: () => onNavigate('bottlenecks'), color: 'text-amber-500' },
+          { label: 'GIS Map', icon: MapPin, action: () => onNavigate('map'), color: 'text-emerald-500' },
+          { label: 'What-If Simulator', icon: Sliders, action: () => onNavigate('simulator'), color: 'text-violet-500' },
+        ].map(link => {
+          const Icon = link.icon;
+          return (
+            <button
+              key={link.label}
+              onClick={link.action}
+              className="glass-card p-3 flex items-center gap-2.5 text-left hover:bg-slate-50 dark:hover:bg-[#181E28] transition-colors cursor-pointer group"
+            >
+              <Icon className={`w-4 h-4 shrink-0 ${link.color}`} />
+              <span className="text-xs font-medium text-slate-700 dark:text-[#B8C4D0] group-hover:text-slate-900 dark:group-hover:text-[#EEF2F7] transition-colors">
+                {link.label}
+              </span>
+              <ArrowRight className="w-3 h-3 text-slate-400 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
+            </button>
+          );
+        })}
       </div>
     </div>
   );

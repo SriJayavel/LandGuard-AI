@@ -52,3 +52,16 @@ Thumbs.db
 
 # Agent Skills (Local AI tooling cache)
 .agents/
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
+
+# Local Dev & Scripts
+AGENTS.md
+DEMO_RUNBOOK.md
+launch_localhost.bat
+sync_to_hackaton.ps1

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Manrope:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -10,125 +10,325 @@
    ========================================================================== */
 
 :root {
-  /* Canvas & Surfaces (Light Benchmark) */
-  --bg-app: #F8FAFC;
+  /* Canonical Institutional Tokens */
+  --glass-bg: #FFFFFF;
+  --glass-border: #E2E8F0;
+  --glass-blur: none;
+  --glass-inner-bevel: none;
+
+  /* Canonical Palette */
+  --color-slate: #0B1118;
+  --color-acrylic: #FFFFFF;
+  --color-sovereign-blue: #1D4ED8;
+  --color-signal-crimson: #B91C1C;
+  --color-signal-amber: #B45309;
+  --color-signal-emerald: #15803D;
+
+  /* Typography - Single Primary UI Font: Plus Jakarta Sans */
+  --font-primary: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-display: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-body: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* Canvas & Surfaces (Off-White Canvas, Pure White Content Surfaces) */
+  --bg-app: #F4F6F8;
   --bg-sidebar: #FFFFFF;
   --bg-surface: #FFFFFF;
-  --bg-surface-elevated: #F1F5F9;
+  --bg-surface-elevated: #FFFFFF;
   --bg-surface-subtle: #F8FAFC;
   --border-color: #E2E8F0;
   --border-color-strong: #CBD5E1;
 
-  /* Institutional Typography */
+  /* Institutional Typography (Deep Navy / Charcoal) */
   --text-primary: #0F172A;
-  --text-secondary: #475569;
-  --text-muted: #64748B;
-  --text-subtle: #94A3B8;
+  --text-secondary: #334155;
+  --text-muted: #475569;
+  --text-subtle: #64748B;
 
-  /* Sovereign Government Brand Palette (Blue-First, Neutral-Dominant) */
+  /* Sovereign Government Brand Palette (Government Blue) */
   --navy-brand: #0F2942;
   --blue-primary: #1D4ED8;
   --blue-hover: #1E40AF;
   --blue-subtle: #EFF6FF;
   --blue-border: #BFDBFE;
 
-  /* Semantic Risk Palette (Used only when communicating risk) */
-  --risk-critical: #DC2626;
+  /* Semantic Risk Palette (Red only for critical risk, Amber only for warnings, Green only for verified) */
+  --risk-critical: #B91C1C;
   --risk-critical-bg: #FEF2F2;
-  --risk-critical-border: #FECACA;
-  --risk-critical-text: #B91C1C;
+  --risk-critical-border: #FCA5A5;
+  --risk-critical-text: #991B1B;
 
-  --risk-elevated: #D97706;
+  --risk-elevated: #B45309;
   --risk-elevated-bg: #FFFBEB;
   --risk-elevated-border: #FDE68A;
-  --risk-elevated-text: #B45309;
+  --risk-elevated-text: #92400E;
 
-  --risk-stable: #16A34A;
+  --risk-stable: #15803D;
   --risk-stable-bg: #F0FDF4;
   --risk-stable-border: #BBF7D0;
-  --risk-stable-text: #15803D;
+  --risk-stable-text: #166534;
 
-  /* Restrained Shadows */
+  /* Minimal Institutional Shadows */
   --shadow-xs: 0 1px 2px 0 rgba(15, 23, 42, 0.04);
-  --shadow-sm: 0 1px 3px 0 rgba(15, 23, 42, 0.06), 0 1px 2px -1px rgba(15, 23, 42, 0.04);
-  --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.07), 0 2px 4px -2px rgba(15, 23, 42, 0.05);
+  --shadow-sm: 0 1px 2px 0 rgba(15, 23, 42, 0.05);
+  --shadow-md: 0 1px 3px 0 rgba(15, 23, 42, 0.08);
 }
 
 .dark {
-  /* Restrained Institutional Dark Palette (Charcoal / Slate, NOT Cyan / Neon) */
-  --bg-app: #0B1118;
-  --bg-sidebar: #0D141D;
-  --bg-surface: #111A24;
-  --bg-surface-elevated: #151F2B;
-  --bg-surface-subtle: #0E1620;
-  --border-color: #263342;
-  --border-color-strong: #374759;
+  /* ── Premium Obsidian Dark Palette ─────────────────────────────────────
+     Inspired by: Linear, Vercel, Raycast
+     Rule: No cyan. No green tints. Neutral blue-black foundations.
+     4 distinct surface levels for depth without flatness.
+  ────────────────────────────────────────────────────────────────────── */
+  --glass-bg: #12171F;
+  --glass-border: rgba(255,255,255,0.07);
+  --glass-blur: none;
+  --glass-inner-bevel: none;
 
-  /* Typography */
-  --text-primary: #F3F6FA;
-  --text-secondary: #9AA8B8;
-  --text-muted: #6F7D8D;
-  --text-subtle: #4D5B6B;
+  --glass-bg-dark: #12171F;
+  --glass-border-dark: rgba(255,255,255,0.07);
+  --glass-inner-bevel-dark: none;
 
-  /* Brand Palette (Restrained Blue, No Cyan) */
-  --navy-brand: #F3F6FA;
-  --blue-primary: #3B82F6;
-  --blue-hover: #60A5FA;
-  --blue-subtle: rgba(59, 130, 246, 0.12);
-  --blue-border: rgba(59, 130, 246, 0.3);
+  /* Canvas & Surfaces — 4 perceptually distinct levels */
+  --bg-app:              #0A0D14;  /* outermost — pure ink                  */
+  --bg-sidebar:          #0D1117;  /* sidebar — one step above ink          */
+  --bg-surface:          #12171F;  /* default card surface                   */
+  --bg-surface-elevated: #181E28;  /* elevated card / dropdown               */
+  --bg-surface-subtle:   #0F131A;  /* inset / recessed panels                */
 
-  /* Semantic Risk Palette in Dark Mode */
-  --risk-critical: #EF4444;
-  --risk-critical-bg: rgba(239, 68, 68, 0.12);
-  --risk-critical-border: rgba(239, 68, 68, 0.3);
-  --risk-critical-text: #FCA5A5;
+  --border-color:        rgba(255,255,255,0.07);  /* barely-there hairlines   */
+  --border-color-strong: rgba(255,255,255,0.13);  /* interactive borders       */
 
-  --risk-elevated: #F59E0B;
-  --risk-elevated-bg: rgba(245, 158, 11, 0.12);
-  --risk-elevated-border: rgba(245, 158, 11, 0.3);
-  --risk-elevated-text: #FDE68A;
+  /* Typography — warm-shifted whites, no clinical pure-white */
+  --text-primary:   #EEF2F7;   /* warm off-white — primary headings & KPIs  */
+  --text-secondary: #B8C4D0;   /* body copy, table data                      */
+  --text-muted:     #7A8A9A;   /* metadata, labels                           */
+  --text-subtle:    #4D5C6E;   /* disabled, placeholders                     */
 
-  --risk-stable: #22C55E;
-  --risk-stable-bg: rgba(34, 197, 94, 0.12);
-  --risk-stable-border: rgba(34, 197, 94, 0.3);
-  --risk-stable-text: #86EFAC;
+  /* Brand accent — restrained electric blue, no neon glow */
+  --navy-brand:    #EEF2F7;
+  --blue-primary:  #4D8EF0;
+  --blue-hover:    #6BA3F5;
+  --blue-subtle:   rgba(77, 142, 240, 0.10);
+  --blue-border:   rgba(77, 142, 240, 0.22);
 
-  /* Shadows (Zero Glow) */
-  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.35);
-  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px -1px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.45);
+  /* Risk palette — calibrated intensities, no harshness */
+  --risk-critical:        #F47C7C;
+  --risk-critical-bg:     rgba(220, 60, 60, 0.10);
+  --risk-critical-border: rgba(220, 60, 60, 0.22);
+  --risk-critical-text:   #F9A8A8;
+
+  --risk-elevated:        #E8A33A;
+  --risk-elevated-bg:     rgba(217, 119, 6, 0.10);
+  --risk-elevated-border: rgba(217, 119, 6, 0.22);
+  --risk-elevated-text:   #FCD490;
+
+  --risk-stable:          #3FC78D;
+  --risk-stable-bg:       rgba(16, 185, 129, 0.10);
+  --risk-stable-border:   rgba(16, 185, 129, 0.22);
+  --risk-stable-text:     #7DDDB5;
+
+  /* Deep ambient shadows — no colored glows */
+  --shadow-xs: 0 1px 3px rgba(0,0,0,0.55);
+  --shadow-sm: 0 2px 6px rgba(0,0,0,0.55), 0 1px 2px rgba(0,0,0,0.4);
+  --shadow-md: 0 4px 20px rgba(0,0,0,0.65), 0 2px 6px rgba(0,0,0,0.45);
 }
 
 * {
   box-sizing: border-box;
 }
 
+/* Orphan Prevention & Balanced Typography (WCAG / De-AI) */
+h1, h2, h3, h4 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
 body {
-  font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: var(--font-primary);
   background-color: var(--bg-app);
   color: var(--text-primary);
-  min-height: 100vh;
+  min-height: 100dvh;
   margin: 0;
   padding: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   transition: background-color 0.15s ease, color 0.15s ease;
+  position: relative;
 }
 
-/* Tabular Monospace Numerals for Currency, Percentages, and Metrics */
-.font-mono-num {
-  font-family: 'JetBrains Mono', monospace;
-  font-feature-settings: 'tnum' on, 'zero' on;
+/* Physical Surface Tactile Film Grain (Subtle texture, never muddy) */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 90;
+  opacity: 0.035;
+  background-image: url("data:image/png;base64,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");
+  background-repeat: repeat;
+}
+
+.dark body::before {
+  opacity: 0.015;
+  mix-blend-mode: overlay;
+}
+
+/* Universal Reduced Motion Accessibility Override (WCAG 2.2.2 / Phase 5) */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Tabular Numerals for Currency, Percentages, and Counts (rendered in primary UI font with tabular figures, NOT terminal monospace) */
+.font-mono-num,
+.tabular-nums {
+  font-family: inherit;
   font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
 }
 
-/* Institutional Enterprise Cards (Subtle borders, zero glow) */
-.gov-card {
+/* ==========================================================================
+   CANONICAL TYPOGRAPHY HIERARCHY SYSTEM
+   Page title: 28-32px / semibold
+   Section title: 18-20px / semibold
+   Card title: 14-16px / semibold
+   Body: 13-14px
+   Metadata: 11-12px
+   Large KPI: 28-36px
+   Monospace: Strictly for Case IDs, numerical model metrics, timestamps, technical values
+   ========================================================================== */
+
+/* Page title: 28-32px / semibold */
+.gov-page-title {
+  font-family: var(--font-primary);
+  font-size: 1.875rem; /* 30px */
+  line-height: 2.25rem;
+  font-weight: 600; /* semibold */
+  letter-spacing: -0.025em;
+  color: var(--text-primary);
+}
+@media (max-width: 640px) {
+  .gov-page-title {
+    font-size: 1.75rem; /* 28px */
+    line-height: 2.125rem;
+  }
+}
+
+/* Section title: 18-20px / semibold */
+.gov-section-title {
+  font-family: var(--font-primary);
+  font-size: 1.1875rem; /* 19px */
+  line-height: 1.625rem;
+  font-weight: 600; /* semibold */
+  letter-spacing: -0.015em;
+  color: var(--text-primary);
+}
+
+/* Card title: 14-16px / semibold */
+.gov-card-title {
+  font-family: var(--font-primary);
+  font-size: 0.9375rem; /* 15px */
+  line-height: 1.375rem;
+  font-weight: 600; /* semibold */
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+}
+
+/* Body: 13-14px */
+.gov-body {
+  font-family: var(--font-primary);
+  font-size: 0.875rem; /* 14px */
+  line-height: 1.375rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+}
+
+.gov-body-sm {
+  font-family: var(--font-primary);
+  font-size: 0.8125rem; /* 13px */
+  line-height: 1.25rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+}
+
+/* Metadata: 11-12px */
+.gov-metadata {
+  font-family: var(--font-primary);
+  font-size: 0.75rem; /* 12px */
+  line-height: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--text-subtle);
+}
+
+.gov-metadata-xs {
+  font-family: var(--font-primary);
+  font-size: 0.6875rem; /* 11px */
+  line-height: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.015em;
+  color: var(--text-subtle);
+}
+
+/* Large KPI: 28-36px */
+.gov-large-kpi {
+  font-family: var(--font-primary);
+  font-size: 2rem; /* 32px */
+  line-height: 2.25rem;
+  font-weight: 600; /* semibold */
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+  color: var(--text-primary);
+}
+
+.gov-large-kpi-xl {
+  font-family: var(--font-primary);
+  font-size: 2.25rem; /* 36px */
+  line-height: 2.5rem;
+  font-weight: 600; /* semibold */
+  letter-spacing: -0.025em;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+  color: var(--text-primary);
+}
+
+/* Monospace: strictly and exclusively reserved for Case IDs, numerical model metrics, timestamps, technical values */
+.gov-mono,
+.font-mono {
+  font-family: var(--font-mono);
+  font-feature-settings: 'tnum' 1, 'zero' 1;
+}
+
+/* Institutional Enterprise Cards & Surfaces (Solid surfaces, 12-16px radius, subtle 1px borders, minimal shadow) */
+.gov-card,
+.gov-surface {
   background-color: var(--bg-surface);
   border: 1px solid var(--border-color);
-  border-radius: 6px;
+  border-radius: 12px;
   box-shadow: var(--shadow-sm);
   transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.gov-surface-subtle {
+  background-color: var(--bg-surface-subtle);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+}
+
+.gov-masthead {
+  background-color: var(--bg-surface);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .gov-card-interactive {
@@ -137,6 +337,182 @@ body {
 
 .gov-card-interactive:hover {
   border-color: var(--border-color-strong);
+}
+
+/* Institutional Statutory Badges & Provenance Tags */
+.gov-badge-statutory {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+  border-width: 1px;
+}
+
+.gov-badge-statutory.critical {
+  background-color: var(--risk-critical-bg);
+  border-color: var(--risk-critical-border);
+  color: var(--risk-critical-text);
+}
+
+.gov-badge-statutory.elevated {
+  background-color: var(--risk-elevated-bg);
+  border-color: var(--risk-elevated-border);
+  color: var(--risk-elevated-text);
+}
+
+.gov-badge-statutory.stable {
+  background-color: var(--risk-stable-bg);
+  border-color: var(--risk-stable-border);
+  color: var(--risk-stable-text);
+}
+
+.gov-provenance-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.125rem 0.375rem;
+  border-radius: 3px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+}
+
+/* Institutional Government Register Table */
+.gov-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+  line-height: 1.25rem;
+}
+
+.gov-table th {
+  background-color: var(--bg-surface-subtle);
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.625rem 0.75rem;
+  border-bottom: 1px solid var(--border-color);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.gov-table td {
+  padding: 0.625rem 0.75rem;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
+  vertical-align: middle;
+}
+
+.gov-table tbody tr:hover {
+  background-color: var(--bg-surface-elevated);
+}
+
+/* Canonical Interactive Focus-Ring & Action Micro-States */
+.focus-ring {
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.focus-ring:focus-visible {
+  outline: none !important;
+  box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px #1D4ED8 !important;
+}
+
+.dark .focus-ring:focus-visible {
+  box-shadow: 0 0 0 2px #0B1118, 0 0 0 4px #3B82F6 !important;
+}
+
+.focus-ring:active {
+  transform: scale(0.98);
+}
+
+.focus-ring:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-action {
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-action:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px #1D4ED8;
+}
+
+.dark .btn-action:focus-visible {
+  box-shadow: 0 0 0 2px #0B1118, 0 0 0 4px #3B82F6;
+}
+
+.btn-action:active {
+  transform: scale(0.98);
+}
+
+.btn-action:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Restrained Institutional Surfaces (Solid Opaque, 12-14px Radius, Zero Decorative Glassmorphism) */
+.glass-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+  border-radius: 12px;
+  transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.glass-card-elevated {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-md);
+  border-radius: 14px;
+}
+
+.glass-panel {
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.glass-input {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  border-radius: 6px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.dark .glass-input {
+  background: rgba(14, 23, 36, 0.6);
+  border-color: var(--border-color);
+}
+
+.glass-input:focus {
+  outline: none;
+  border-color: var(--blue-primary);
+  box-shadow: 0 0 0 2px rgba(29, 78, 216, 0.2);
+}
+
+.glass-tag {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.02em;
 }
 
 /* Leaflet Container Overrides */
@@ -169,13 +545,15 @@ body {
 }
 
 .dark .leaflet-popup-content-wrapper {
-  background: #111A24 !important;
+  background: #131923 !important;
   color: #F3F6FA !important;
-  border: 1px solid #263342 !important;
+  border: 1px solid #212B38 !important;
+  border-radius: 12px !important;
 }
 
 .dark .leaflet-popup-tip {
-  background: #111A24 !important;
+  background: #131923 !important;
+  border: 1px solid #212B38 !important;
 }
 
 .dark .leaflet-popup-close-button {
@@ -205,25 +583,141 @@ body {
   background: var(--text-muted);
 }
 
-/* Institutional Print Stylesheet */
+/* Leaflet High-Contrast Map Glass Overlay (WCAG AA Gate >= 7.5:1) */
+.glass-map-overlay {
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12), inset 0 1px 0 0 rgba(255, 255, 255, 0.8);
+  border-radius: 8px;
+}
+
+.dark .glass-map-overlay {
+  background: rgba(14, 23, 36, 0.94);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.45), inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+}
+
+/* Glass Skeleton Shimmer Animation */
+@keyframes glassShimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.glass-skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(226, 232, 240, 0.4) 25%,
+    rgba(226, 232, 240, 0.8) 37%,
+    rgba(226, 232, 240, 0.4) 63%
+  );
+  background-size: 400% 100%;
+  animation: glassShimmer 1.5s ease infinite;
+  border-radius: 4px;
+}
+
+.dark .glass-skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(38, 51, 66, 0.4) 25%,
+    rgba(55, 71, 89, 0.8) 37%,
+    rgba(38, 51, 66, 0.4) 63%
+  );
+  background-size: 400% 100%;
+  animation: glassShimmer 1.5s ease infinite;
+}
+
+/* Universal Reduced-Motion & Accessibility (WCAG 2.3.3 / De-AI) */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Low-Power & Reduced-Motion Performance Fallback (Zero Frame Drops on Laptop GPUs) */
+@media (prefers-reduced-motion: reduce), (update: slow) {
+  .glass-card,
+  .glass-card-elevated,
+  .glass-panel,
+  .glass-input,
+  .glass-map-overlay {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
+
+.low-power-mode .glass-card,
+.low-power-mode .glass-card-elevated,
+.low-power-mode .glass-panel,
+.low-power-mode .glass-input,
+.low-power-mode .glass-map-overlay {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background-color: var(--bg-surface) !important;
+}
+
+/* Institutional Government of Maharashtra Print Stylesheet */
 @media print {
+  @page {
+    size: A4 portrait;
+    margin: 15mm 15mm 15mm 15mm;
+  }
+
   aside,
-  header button,
+  header,
+  nav,
   button,
+  select,
+  input,
   .no-print {
     display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
   }
 
   body {
     background-color: #FFFFFF !important;
     color: #000000 !important;
     font-size: 10pt;
+    font-family: 'Manrope', 'Plus Jakarta Sans', system-ui, sans-serif !important;
   }
 
+  .glass-card,
+  .glass-card-elevated,
   .gov-card {
+    background: transparent !important;
     border: 1px solid #CBD5E1 !important;
     box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
     break-inside: avoid;
+    border-radius: 4px !important;
+  }
+
+  table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+  }
+
+  th, td {
+    border: 1px solid #CBD5E1 !important;
+    padding: 6px 8px !important;
+    color: #000000 !important;
+  }
+
+  th {
+    background-color: #F1F5F9 !important;
+    font-weight: bold !important;
   }
 
   main {
@@ -231,4 +725,118 @@ body {
     margin: 0 !important;
     width: 100% !important;
   }
+}
+
+.print-only {
+  display: none;
+}
+
+/* ==========================================================================
+   GIS Leaflet Operational Risk Map & Drawer Classes
+   ========================================================================== */
+.gov-cluster-marker-icon {
+  background: transparent !important;
+  border: none !important;
+}
+
+.gov-case-marker-icon {
+  background: transparent !important;
+  border: none !important;
+}
+
+.gov-case-drawer {
+  z-index: 500;
+}
+
+/* ==========================================================================
+   OBSIDIAN DARK MODE — HARMONIZATION OVERRIDES
+   Targets inline Tailwind arbitrary values used throughout components
+   and remaps them to the canonical dark palette tokens.
+   ========================================================================== */
+
+/* App backgrounds → ink levels */
+.dark .dark\:bg-\[\#090D14\],
+.dark .dark\:bg-\[\#0B0F17\],
+.dark .dark\:bg-\[\#0A0D14\],
+.dark .dark\:bg-\[\#0B1118\],
+.dark .dark\:bg-\[\#090D16\] {
+  background-color: #0A0D14 !important;
+}
+
+.dark .dark\:bg-\[\#0D1117\],
+.dark .dark\:bg-\[\#0C111D\],
+.dark .dark\:bg-\[\#0D141D\] {
+  background-color: #0D1117 !important;
+}
+
+.dark .dark\:bg-\[\#101623\],
+.dark .dark\:bg-\[\#111A24\],
+.dark .dark\:bg-\[\#12171F\],
+.dark .dark\:bg-\[\#131923\],
+.dark .dark\:bg-\[\#151C28\] {
+  background-color: #12171F !important;
+}
+
+.dark .dark\:bg-\[\#161F32\],
+.dark .dark\:bg-\[\#181E28\],
+.dark .dark\:bg-\[\#1A2332\],
+.dark .dark\:bg-\[\#151F2B\] {
+  background-color: #181E28 !important;
+}
+
+/* Borders → translucent hairlines */
+.dark .dark\:border-\[\#263342\],
+.dark .dark\:border-\[\#1E293B\],
+.dark .dark\:border-\[\#212B38\],
+.dark .dark\:border-\[\#1F2937\] {
+  border-color: rgba(255,255,255,0.07) !important;
+}
+
+.dark .dark\:border-\[\#334155\],
+.dark .dark\:border-\[\#2A3649\],
+.dark .dark\:border-\[\#374759\] {
+  border-color: rgba(255,255,255,0.13) !important;
+}
+
+/* Primary text → warm off-white */
+.dark .dark\:text-\[\#F3F6FA\],
+.dark .dark\:text-\[\#F8FAFC\],
+.dark .dark\:text-\[\#F1F5F9\] {
+  color: #EEF2F7 !important;
+}
+
+/* Secondary text → blue-slate */
+.dark .dark\:text-\[\#CBD5E1\],
+.dark .dark\:text-\[\#9AA8B8\],
+.dark .dark\:text-\[\#B8C4D0\] {
+  color: #B8C4D0 !important;
+}
+
+/* Muted text → step up for WCAG AA */
+.dark .dark\:text-\[\#64748B\],
+.dark .dark\:text-\[\#6F7D8D\],
+.dark .dark\:text-\[\#94A3B8\] {
+  color: #7A8A9A !important;
+}
+
+/* Placeholders */
+.dark .dark\:placeholder-\[\#6F7D8D\]::placeholder,
+.dark .dark\:placeholder-\[\#64748B\]::placeholder {
+  color: #4D5C6E !important;
+}
+
+/* gov-surface utilities */
+.dark .gov-surface {
+  background-color: var(--bg-surface) !important;
+  border-color: var(--border-color) !important;
+}
+
+.dark .gov-surface-subtle {
+  background-color: var(--bg-surface-subtle) !important;
+  border-color: var(--border-color) !important;
+}
+
+.dark .gov-surface-elevated {
+  background-color: var(--bg-surface-elevated) !important;
+  border-color: var(--border-color-strong) !important;
 }

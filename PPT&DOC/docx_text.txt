@@ -1,0 +1,413 @@
+LandGuard AI
+Team CyberLeek — SIH 2026 (PS ID 26017)
+Prototype Build Guide for 2 Coders
+GOAL
+Build a working, demoable prototype of a land-acquisition delay risk dashboard by Monday morning — not the full production system from the slides. This guide tells two coders exactly what to build, in what order, and what to fake or skip to hit the deadline.
+Team split assumed for this guide:
+Coder A — Backend & Machine Learning (data, model, API, explainability)
+Coder B — Frontend & Dashboard (React UI, map, charts, alerts)
+Both of you should read Sections 1–4 together before splitting up. Sections 5 and 6 are your individual, step-by-step tracks — you can work through them in parallel from Day 1 onward.
+1. What You're Actually Building
+Your slides describe a full system: OCR + Legal-BERT for legacy documents, multilingual NLP, XGBoost/LightGBM risk models, SHAP/LIME explainability, GIS integration with NAKSHA, and department-wide rollout. That is a 6-month product, not a weekend build.
+For the hackathon prototype, keep the exact same story — Predict → Explain → Alert → Act — but power it with a smaller, real, working slice, and simulate the parts that would take too long.
+1.1 Build for real
+A synthetic but realistic dataset of land-acquisition cases (you generate this — no real government data needed).
+A real ML model (XGBoost) trained on that data to output a risk score per case.
+Real explainability (SHAP) showing which factors drove each score.
+A real REST API serving predictions, explanations, and alerts.
+A real React dashboard: case list, risk badges, a map view, a case detail view with SHAP chart, and an alerts panel.
+1.2 Fake or simplify for the demo
+OCR / scanned-document extraction → skip entirely. Mention it as “future integration” in your pitch.
+Legal-BERT / multilingual NLP → skip. Replace with a couple of pre-set “legal flag” fields in your synthetic data (already-processed output, not live extraction).
+Real GIS / NAKSHA integration → use Leaflet + OpenStreetMap with made-up but plausible district coordinates. It looks like a GIS dashboard on screen; it does not need to be the real government layer.
+Authentication / role-based access → skip unless you finish everything early.
+Live document upload → skip. Your data is pre-loaded from a CSV you generate.
+1.3 Why this scope is safe to pitch
+Judges evaluate the idea, the demo, and your ability to explain the architecture — not whether you connected to a live government database in 60 hours. Every simplification above has a one-line honest answer (“in production this plugs into DILRMP/NAKSHA via REST”) that keeps your story credible.
+2. Tech Stack (Kept Deliberately Small)
+Layer
+Technology
+Why
+Data
+Python + pandas, a hand-written synthetic generator
+No real dataset access needed; fully under your control
+ML Model
+XGBoost (scikit-learn API)
+Fast to train, good accuracy on tabular data, matches your slides
+Explainability
+SHAP (TreeExplainer)
+Native support for XGBoost, exactly what slide 3 promises
+Backend API
+Flask + flask-cors
+Minimal boilerplate, both of you likely know it, quick to stand up
+Frontend
+React (Vite) + Axios
+Fast dev server, simple data fetching
+Charts
+Recharts
+Drop-in bar/line charts for SHAP factors
+Map
+React-Leaflet + OpenStreetMap
+Free, no API key, looks like a GIS dashboard
+Styling
+Plain CSS or Tailwind (either is fine)
+Whichever coder is faster with it
+Do not add a database (Postgres/Mongo) for the prototype. Load the CSV into memory in Flask at startup and serve it from there. A real DB adds setup time you don't have and buys you nothing for a 3-day demo.
+3. Timeline (Today – Monday)
+Adjust the exact hours to your class/college schedule, but keep this order — integration on Day 2 is non-negotiable; don't let both coders work in isolation until Day 3.
+When
+Coder A (Backend/ML)
+Coder B (Frontend)
+Day 1 – Session 1 (~1 hr, together)
+Agree on API contract (Section 4) and folder structure
+Same session — both agree together
+Day 1 – rest of day
+Generate synthetic dataset, train XGBoost model, get SHAP working in a script
+Scaffold React app, build layout shell + case list table with mock JSON
+Day 2 – morning
+Wrap model in Flask API, expose all 4 endpoints, test with curl/Postman
+Build map view + case detail view + alerts panel, still on mock JSON
+Day 2 – afternoon
+INTEGRATION: swap frontend's mock JSON for real API calls. Fix data-shape mismatches together.
+INTEGRATION: same session
+Day 2 – evening
+Add /api/insights (bottleneck aggregation endpoint)
+Add insights panel, filters (district/stage/risk level), polish styling
+Day 3 (Sun) – morning
+Bug fixes, edge cases (empty data, missing fields)
+Bug fixes, responsive layout, color/contrast pass
+Day 3 – afternoon
+Write README with exact run commands
+Full click-through rehearsal of demo script (Section 8)
+Day 3 – evening
+Freeze code. Only fix demo-breaking bugs after this point.
+Same — code freeze together
+Monday – before presenting
+Run full smoke test on the actual presentation laptop
+Same — do this together, 60+ minutes before your slot
+4. API Contract — Agree on This BEFORE Splitting Up
+This is the single most important step. If both of you agree on this JSON shape right now, you can build frontend and backend fully in parallel using mock data, and integration on Day 2 will take an hour instead of a full day.
+GET /api/projects
+Returns the list for the dashboard table and map.
+[
+  {
+    "project_id": "LA-1042",
+    "district": "Nagpur",
+    "stage": "Compensation",
+    "risk_score": 0.82,
+    "risk_level": "High",
+    "lat": 21.1458,
+    "lng": 79.0882,
+    "days_in_stage": 47
+  }
+]
+GET /api/projects/:id
+Returns full detail plus SHAP explanation for one case.
+{
+  "project_id": "LA-1042",
+  "district": "Nagpur",
+  "stage": "Compensation",
+  "risk_score": 0.82,
+  "risk_level": "High",
+  "top_factors": [
+    { "feature": "Legal case pending", "impact": 0.31 },
+    { "feature": "Low R&R compliance (42%)", "impact": 0.24 },
+    { "feature": "Days in stage: 47 (avg: 18)", "impact": 0.19 }
+  ],
+  "recommended_action": "Escalate to District Revenue Officer — legal clearance overdue."
+}
+GET /api/alerts
+Same shape as /api/projects but pre-filtered to risk_level = High, sorted by risk_score descending. Powers the alerts panel.
+GET /api/insights
+Aggregated view for the “Bottleneck Intelligence” panel — the most common risk factors across all high-risk cases.
+[
+  { "factor": "Legal case pending", "affected_projects": 18 },
+  { "factor": "Low R&R compliance", "affected_projects": 14 },
+  { "factor": "Revenue dept delay", "affected_projects": 9 }
+]
+AGREEMENT
+Field names above are the contract. If either of you needs to change a field name or add one, say so out loud before changing it — a silent rename is the #1 cause of “works on my machine” integration failures.
+5. Coder A — Backend & ML, Step by Step
+Step 1 — Environment setup (15 min)
+mkdir landguard-backend && cd landguard-backend
+python3 -m venv venv
+source venv/bin/activate        # Windows: venv\Scripts\activate
+pip install pandas numpy scikit-learn xgboost shap flask flask-cors joblib faker
+Step 2 — Generate a synthetic dataset (1–2 hr)
+Create generate_data.py. It must produce ~600 rows that LOOK like real land-acquisition cases and have a genuine (not hand-labeled) relationship between features and delay risk, so the model actually has something to learn.
+# generate_data.py
+import pandas as pd, numpy as np
+from faker import Faker
+ 
+fake = Faker('en_IN')
+np.random.seed(42)
+N = 600
+districts = ['Nagpur','Pune','Nashik','Aurangabad','Amravati','Kolhapur']
+stages = ['Notification','Survey','Award','Compensation','Possession']
+ 
+df = pd.DataFrame({
+    'project_id': [f'LA-{1000+i}' for i in range(N)],
+    'district': np.random.choice(districts, N),
+    'stage': np.random.choice(stages, N),
+    'days_in_stage': np.random.randint(1, 120, N),
+    'legal_case_pending': np.random.choice([0, 1], N, p=[0.7, 0.3]),
+    'rr_compliance_pct': np.random.randint(20, 100, N),
+    'revenue_dept_delay_flag': np.random.choice([0, 1], N, p=[0.6, 0.4]),
+    'num_landowners': np.random.randint(5, 300, N),
+    'past_disputes_count': np.random.poisson(1.2, N),
+})
+ 
+# Ground-truth risk driven by a real (weighted) formula + noise,
+# so XGBoost has genuine signal to learn instead of pure randomness.
+risk_raw = (
+    0.02 * df.days_in_stage +
+    3.0  * df.legal_case_pending +
+    0.03 * (100 - df.rr_compliance_pct) +
+    1.5  * df.revenue_dept_delay_flag +
+    0.6  * df.past_disputes_count +
+    np.random.normal(0, 1.5, N)
+)
+df['risk_label'] = (risk_raw > risk_raw.median()).astype(int)
+ 
+# fake but plausible lat/lng around each district centre
+centres = {'Nagpur': (21.1458,79.0882), 'Pune': (18.5204,73.8567),
+           'Nashik': (19.9975,73.7898), 'Aurangabad': (19.8762,75.3433),
+           'Amravati': (20.9374,77.7796), 'Kolhapur': (16.7050,74.2433)}
+df['lat'] = df.district.map(lambda d: centres[d][0] + np.random.uniform(-0.15,0.15))
+df['lng'] = df.district.map(lambda d: centres[d][1] + np.random.uniform(-0.15,0.15))
+ 
+df.to_csv('land_cases.csv', index=False)
+print(df.risk_label.value_counts())
+Run it: python generate_data.py — check land_cases.csv looks sane and risk_label isn't 100% one class.
+Step 3 — Train the model + set up SHAP (1–2 hr)
+# train_model.py
+import pandas as pd, joblib
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder
+import xgboost as xgb
+import shap
+ 
+df = pd.read_csv('land_cases.csv')
+cat_cols = ['district', 'stage']
+encoders = {}
+for c in cat_cols:
+    le = LabelEncoder()
+    df[c + '_enc'] = le.fit_transform(df[c])
+    encoders[c] = le
+ 
+features = ['district_enc','stage_enc','days_in_stage','legal_case_pending',
+            'rr_compliance_pct','revenue_dept_delay_flag','num_landowners',
+            'past_disputes_count']
+X = df[features]
+y = df['risk_label']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+ 
+model = xgb.XGBClassifier(n_estimators=150, max_depth=4, learning_rate=0.1,
+                          eval_metric='logloss')
+model.fit(X_train, y_train)
+print('Test accuracy:', model.score(X_test, y_test))
+ 
+explainer = shap.TreeExplainer(model)
+ 
+joblib.dump(model, 'model.joblib')
+joblib.dump(encoders, 'encoders.joblib')
+joblib.dump(explainer, 'explainer.joblib')
+joblib.dump(features, 'features.joblib')
+Run it: python train_model.py — aim for test accuracy comfortably above 70%. If it's near 50%, loosen the noise in Step 2 (reduce the np.random.normal spread).
+Step 4 — Build the Flask API (2–3 hr)
+# app.py
+from flask import Flask, jsonify, request
+from flask_cors import CORS
+import pandas as pd, joblib, numpy as np
+ 
+app = Flask(__name__)
+CORS(app)
+ 
+df = pd.read_csv('land_cases.csv')
+model = joblib.load('model.joblib')
+encoders = joblib.load('encoders.joblib')
+explainer = joblib.load('explainer.joblib')
+features = joblib.load('features.joblib')
+ 
+FRIENDLY_NAMES = {
+    'legal_case_pending': 'Legal case pending',
+    'rr_compliance_pct': 'R&R compliance level',
+    'revenue_dept_delay_flag': 'Revenue department delay',
+    'days_in_stage': 'Time stuck in current stage',
+    'num_landowners': 'Number of landowners involved',
+    'past_disputes_count': 'History of past disputes',
+    'district_enc': 'District', 'stage_enc': 'Acquisition stage',
+}
+ 
+def score_row(row):
+    for c in ['district', 'stage']:
+        row[c + '_enc'] = encoders[c].transform([row[c]])[0]
+    X = pd.DataFrame([row[features]])
+    proba = float(model.predict_proba(X)[0][1])
+    return proba, X
+ 
+def risk_level(score):
+    return 'High' if score >= 0.66 else 'Medium' if score >= 0.4 else 'Low'
+ 
+@app.route('/api/projects')
+def list_projects():
+    out = []
+    for _, row in df.iterrows():
+        score, _ = score_row(row.copy())
+        out.append({
+            'project_id': row.project_id, 'district': row.district,
+            'stage': row.stage, 'risk_score': round(score, 2),
+            'risk_level': risk_level(score), 'lat': row.lat, 'lng': row.lng,
+            'days_in_stage': int(row.days_in_stage),
+        })
+    return jsonify(out)
+ 
+@app.route('/api/projects/<pid>')
+def project_detail(pid):
+    row = df[df.project_id == pid].iloc[0]
+    score, X = score_row(row.copy())
+    shap_vals = explainer.shap_values(X)[0]
+    pairs = sorted(zip(features, shap_vals), key=lambda t: -abs(t[1]))[:3]
+    top_factors = [{'feature': FRIENDLY_NAMES.get(f, f), 'impact': round(float(v), 2)}
+                   for f, v in pairs]
+    action = 'Escalate to District Revenue Officer.' if score >= 0.66 else \
+             'Monitor — review again in 2 weeks.' if score >= 0.4 else \
+             'No action needed.'
+    return jsonify({
+        'project_id': pid, 'district': row.district, 'stage': row.stage,
+        'risk_score': round(score, 2), 'risk_level': risk_level(score),
+        'top_factors': top_factors, 'recommended_action': action,
+    })
+ 
+@app.route('/api/alerts')
+def alerts():
+    all_projects = list_projects().json
+    high = [p for p in all_projects if p['risk_level'] == 'High']
+    return jsonify(sorted(high, key=lambda p: -p['risk_score']))
+ 
+@app.route('/api/insights')
+def insights():
+    high_ids = [p['project_id'] for p in alerts().json]
+    counter = {}
+    for pid in high_ids:
+        detail = project_detail(pid).json
+        for f in detail['top_factors']:
+            counter[f['feature']] = counter.get(f['feature'], 0) + 1
+    ranked = sorted(counter.items(), key=lambda t: -t[1])[:5]
+    return jsonify([{'factor': k, 'affected_projects': v} for k, v in ranked])
+ 
+if __name__ == '__main__':
+    app.run(debug=True, port=5000)
+Run it: python app.py, then test each endpoint in the browser or with curl http://localhost:5000/api/projects before telling Coder B it's ready.
+Step 5 — Insights endpoint tuning + edge cases (Day 2 evening)
+Handle an unknown project_id in /api/projects/:id with a 404 JSON error instead of crashing.
+Make sure /api/alerts never returns an empty list in the demo dataset — you want at least 5–10 High-risk cases visible.
+Double-check risk_level thresholds (0.4 / 0.66) actually split your 600 rows into a reasonable High/Medium/Low mix — adjust if everything lands in one bucket.
+Step 6 — README for your half (Day 3)
+Write exact copy-paste commands so Coder B (and judges, if they ask) can start your API cold: venv activation, pip install, and python app.py, plus which port it runs on.
+6. Coder B — Frontend & Dashboard, Step by Step
+Step 1 — Scaffold the app (20 min)
+npm create vite@latest landguard-frontend -- --template react
+cd landguard-frontend
+npm install
+npm install axios recharts react-leaflet leaflet
+npm run dev
+Don't wait on Coder A. Build against mock JSON that matches the API contract in Section 4 exactly — save it as src/mockData.js and import it wherever you'd normally call the API.
+Step 2 — Layout shell (30–45 min)
+Header bar: “LandGuard AI” + team name, and a subtitle “Predict → Explain → Alert → Act” — this ties every screen back to your pitch.
+Left/top nav with three views: Dashboard, Map, Alerts (a simple useState tab switch is enough — you don't need React Router for a demo).
+Step 3 — Case list table (Day 1, 1–2 hr)
+A table or card grid of all projects: Project ID, District, Stage, Days in Stage, and a colored Risk badge (green = Low, amber = Medium, red = High). Clicking a row opens the case detail view (Step 5).
+// RiskBadge.jsx
+export default function RiskBadge({ level }) {
+  const colors = { Low: '#15803d', Medium: '#b45309', High: '#b91c1c' };
+  return (
+    <span style={{
+      background: colors[level], color: 'white', padding: '2px 10px',
+      borderRadius: 12, fontSize: 12, fontWeight: 600
+    }}>{level}</span>
+  );
+}
+Step 4 — Map view (Day 1– 2, 1–2 hr)
+// MapView.jsx
+import { MapContainer, TileLayer, CircleMarker, Popup } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+ 
+const colors = { Low: 'green', Medium: 'orange', High: 'red' };
+ 
+export default function MapView({ projects }) {
+  return (
+    <MapContainer center={[19.7, 76.0]} zoom={6} style={{ height: '500px' }}>
+      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+      {projects.map(p => (
+        <CircleMarker key={p.project_id} center={[p.lat, p.lng]}
+          radius={8} pathOptions={{ color: colors[p.risk_level], fillOpacity: 0.8 }}>
+          <Popup>{p.project_id} — {p.district}<br/>Risk: {p.risk_level}</Popup>
+        </CircleMarker>
+      ))}
+    </MapContainer>
+  );
+}
+Step 5 — Case detail view with SHAP chart (Day 2, 1–2 hr)
+On row click, fetch /api/projects/:id and render top_factors as a horizontal bar chart with Recharts, plus the recommended_action text in a highlighted box. This is your “Explain” step — spend real polish time here, it's the most impressive screen in the demo.
+// ShapChart.jsx
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+ 
+export default function ShapChart({ factors }) {
+  return (
+    <ResponsiveContainer width="100%" height={200}>
+      <BarChart data={factors} layout="vertical">
+        <XAxis type="number" />
+        <YAxis type="category" dataKey="feature" width={180} />
+        <Tooltip />
+        <Bar dataKey="impact" fill="#b91c1c" />
+      </BarChart>
+    </ResponsiveContainer>
+  );
+}
+Step 6 — Alerts panel (Day 2, 1 hr)
+Fetch /api/alerts and render as a stacked list, most urgent first — project ID, district, risk score, and a one-line reason (reuse the first entry of top_factors if you already fetched detail, or just show risk_score if not). This is your “Alert” step.
+Step 7 — Insights / bottleneck panel (Day 2 evening, optional but strong)
+Fetch /api/insights and show it as a small horizontal bar chart: “Legal case pending — affecting 18 projects” etc. This single screen directly demonstrates the “Bottleneck Intelligence” bullet from your slides with almost no extra backend work.
+Step 8 — Swap mock data for the real API (Day 2 afternoon, WITH Coder A)
+// api.js
+import axios from 'axios';
+const API = 'http://localhost:5000/api';
+export const getProjects = () => axios.get(`${API}/projects`).then(r => r.data);
+export const getProject  = (id) => axios.get(`${API}/projects/${id}`).then(r => r.data);
+export const getAlerts   = () => axios.get(`${API}/alerts`).then(r => r.data);
+export const getInsights = () => axios.get(`${API}/insights`).then(r => r.data);
+Replace every mockData import with the matching function above. If a field is missing or named differently than expected, that's a contract mismatch — fix the name, don't restructure your component.
+Step 9 — Filters and polish (Day 2 evening – Day 3)
+Dropdown filters for District and Stage above the case table.
+Loading spinners and a friendly empty state (“No high-risk cases right now”) so nothing looks broken if data is sparse.
+Consistent color palette across badge, map marker, and chart colors (reuse the same Low/Medium/High color map everywhere — define it once and import it).
+7. Integration Checklist (Day 2 Afternoon, Do This Together)
+Coder A starts Flask (python app.py) and confirms all 4 endpoints respond in the browser.
+Coder B points api.js at http://localhost:5000/api and reloads the React app.
+Walk through every screen together: Dashboard → click a case → detail view with SHAP chart → Map → Alerts → Insights.
+Fix any field-name mismatches immediately — don't let them pile up.
+Check CORS errors in the browser console — if you see them, confirm flask_cors.CORS(app) is present and Flask was restarted after adding it.
+Commit working code to git now, before adding anything else. A working checkpoint you can roll back to is worth more than any single new feature.
+8. Demo Script — Map the Prototype Back to Your Pitch
+Judges will compare what's on screen to your PPT. Narrate it explicitly so the mapping is obvious:
+“Here is the dashboard — every land-acquisition case across districts, with a risk score.” (show case table) — this is Predict.
+“Clicking a high-risk case shows exactly why it's flagged — not a black box.” (show SHAP chart + recommended action) — this is Explain.
+“The Alerts panel surfaces the cases officials need to act on first, ranked by risk.” (show alerts panel) — this is Alert.
+“And recommended actions plus the Insights panel show recurring bottlenecks across projects — so this isn't just monitoring, it drives intervention.” (show insights + recommended_action text) — this is Act.
+“The map view shows this geographically — in production this plugs into GIS layers like NAKSHA; here we've used OpenStreetMap for the prototype.” Be upfront about this — it builds credibility, not doubt.
+Keep the whole walkthrough under 3 minutes so there's time for questions.
+9. Fallback Plan (Read This Now, Hope You Never Need It)
+IF THE ML PIPELINE STALLS
+Replace XGBoost + SHAP with a simple, transparent weighted-scoring formula (the same one used to generate labels in Step 2 of Section 5) computed directly in Flask. It's not “machine learning” but it is genuinely explainable, keeps the API contract identical, and the frontend doesn't need to change at all. You can honestly describe it as a rule-based v1 with an ML upgrade path — judges respect a working simple system far more than a broken complex one.
+If Leaflet/map setup is eating time on Day 2: drop the map tab, keep district as a text column in the table, and mention GIS as a roadmap item. The SHAP chart and alerts panel matter far more to the pitch.
+If SHAP is slow or won't install: use model.feature_importances_ (global, not per-case) as a stand-in, or just hand-craft the top_factors response using simple if/else rules on the raw field values — visually identical to the judges.
+If integration (Section 7) reveals a mismatch you can't fix quickly: hardcode the mock JSON as the API's actual response temporarily so the demo still works end-to-end, and keep fixing the real pipeline in parallel.
+10. Final Pre-Demo Checklist (Monday Morning)
+Both servers (Flask on :5000, React dev server) start cleanly from a fresh terminal on the actual presentation laptop.
+At least 8–10 High-risk cases are visible so the Alerts and Insights panels aren't empty.
+Full click-through rehearsed at least twice by both coders.
+A short screen recording of a full working demo saved locally, in case live Wi-Fi/laptop issues strike.
+Laptop charger packed. Phone hotspot as backup internet if the map tiles need to load.
+Both coders know the full demo script (Section 8), not just their own half — either of you should be able to present any screen.
+Good luck to Team CyberLeek.
